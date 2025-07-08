@@ -15,8 +15,8 @@ const Navbar = () => {
       <nav className="max-w-screen-xl mx-auto px-10 py-3 flex items-center justify-between">
         {/* Logo + Name */}
         <Link to="/" className="flex items-center space-x-2" onClick={closeMenu}>
-          <img src="/logo.png" alt="SoulMatch" className="w-8 h-8" />
-          <span className="text-2xl font-heading text-pink-600">SoulMatch</span>
+          <span className="text-4xl">💖</span>
+          <span className="text-2xl font-heading font-bold text-pink-600">SoulMatch</span>
         </Link>
 
         {/* Desktop Menu */}
