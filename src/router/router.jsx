@@ -3,7 +3,8 @@ import RootLayout from "../layouts/RootLayout";
 import Home from "../pages/Home/Home/Home";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
-import CreateBiodata from "../pages/CreateBiodata";
+import CreateBiodataModal from "../components/CreateBiodataModal";
+import Biodatas from "../pages/Biodatas";
 
 
 export const router = createBrowserRouter([
@@ -25,8 +26,13 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "/create-biodata",
-        Component: CreateBiodata,
+        path: "/create-biodatamodal",
+        Component: CreateBiodataModal,
+      }, 
+
+      {
+        path: "biodatas",
+        Component: Biodatas,
       }
 
 

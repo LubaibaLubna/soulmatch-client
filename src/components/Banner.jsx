@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Swal from "sweetalert2";
-import CreateBiodata from "../pages/CreateBiodata";
+import CreateBiodataModal from "../components/CreateBiodataModal"; // updated import
 
 const images = [
   "https://i.ibb.co/v4pN8BfY/pexels-wolrider-32632269.jpg",
@@ -26,9 +26,7 @@ const Banner = () => {
   };
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      handleNext();
-    }, 3000);
+    const timer = setInterval(handleNext, 3000);
     return () => clearInterval(timer);
   }, []);
 
@@ -46,8 +44,8 @@ const Banner = () => {
     <div className="relative w-full h-[80vh] md:h-[90vh] overflow-hidden">
       <img
         src={images[current]}
-        className="absolute inset-0 w-full h-full object-cover"
         alt="SoulMatch Banner"
+        className="absolute inset-0 w-full h-full object-cover"
       />
 
       <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center px-4 z-10">
@@ -69,7 +67,7 @@ const Banner = () => {
           Join thousands of happy couples. Create your profile today and meet your perfect match.
         </motion.p>
 
-        <motion.button 
+        <motion.button
           onClick={() => setShowModal(true)}
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -80,6 +78,7 @@ const Banner = () => {
         </motion.button>
       </div>
 
+      {/* Arrows */}
       <button
         onClick={handlePrev}
         className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/60 hover:bg-white text-pink-600 p-2 rounded-full shadow"
@@ -96,16 +95,18 @@ const Banner = () => {
         <FaArrowRight size={18} />
       </button>
 
+      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white w-full max-w-2xl rounded-lg shadow-xl relative overflow-y-auto max-h-[90vh] p-6">
+          <div className="bg-white w-full max-w-3xl rounded-lg shadow-xl relative overflow-y-auto max-h-[90vh] p-6">
             <button
               onClick={() => setShowModal(false)}
               className="absolute top-2 right-4 text-black text-xl font-bold hover:text-red-500"
+              aria-label="Close modal"
             >
               ✕
             </button>
-            <CreateBiodata onSuccess={handleSuccess} />
+            <CreateBiodataModal onSuccess={handleSuccess} onClose={() => setShowModal(false)} />
           </div>
         </div>
       )}

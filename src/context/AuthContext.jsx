@@ -16,8 +16,9 @@ const AuthProvider = ({ children }) => {
         return () => unsubscribe();
     }, []);
 
+    // ✅ Return the Promise
     const logout = () => {
-        signOut(auth);
+        return signOut(auth);
     };
 
     return (

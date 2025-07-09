@@ -1,14 +1,39 @@
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthContext";
 import { FaBars, FaTimes } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleToggle = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, Logout",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout()
+          .then(() => {
+            Swal.fire("Logged Out!", "You have been logged out successfully.", "success");
+            navigate("/login"); // Redirect to login after logout
+          })
+          .catch((err) => {
+            Swal.fire("Error!", err.message, "error");
+          });
+      }
+    });
+  };
 
   return (
     <header className="bg-white shadow sticky top-0 z-50 font-body">
@@ -25,6 +50,7 @@ const Navbar = () => {
           <li><Link to="/biodatas" className="hover:text-pink-600 transition">Biodatas</Link></li>
           <li><Link to="/about" className="hover:text-pink-600 transition">About Us</Link></li>
           <li><Link to="/contact" className="hover:text-pink-600 transition">Contact Us</Link></li>
+
           {!user ? (
             <li>
               <Link to="/login" className="bg-pink-600 text-white px-4 py-1.5 rounded-full hover:bg-pink-700 transition">
@@ -32,9 +58,17 @@ const Navbar = () => {
               </Link>
             </li>
           ) : (
-            <li>
-              <Link to="/dashboard" className="hover:text-pink-600 transition">Dashboard</Link>
-            </li>
+            <>
+              <li><Link to="/dashboard" className="hover:text-pink-600 transition">Dashboard</Link></li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-4 py-1.5 rounded-full hover:bg-red-600 transition"
+                >
+                  Logout
+                </button>
+              </li>
+            </>
           )}
         </ul>
 
@@ -54,18 +88,36 @@ const Navbar = () => {
             <li><Link to="/biodatas" onClick={closeMenu} className="block hover:text-pink-600">Biodatas</Link></li>
             <li><Link to="/about" onClick={closeMenu} className="block hover:text-pink-600">About Us</Link></li>
             <li><Link to="/contact" onClick={closeMenu} className="block hover:text-pink-600">Contact Us</Link></li>
+
             {!user ? (
               <li>
-                <Link to="/login" onClick={closeMenu} className="block bg-pink-600 text-white px-4 py-2 rounded-full text-center hover:bg-pink-700">
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className="block bg-pink-600 text-white px-4 py-2 rounded-full text-center hover:bg-pink-700"
+                >
                   Login
                 </Link>
               </li>
             ) : (
-              <li>
-                <Link to="/dashboard" onClick={closeMenu} className="block hover:text-pink-600">
-                  Dashboard
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link to="/dashboard" onClick={closeMenu} className="block hover:text-pink-600">
+                    Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={() => {
+                      closeMenu();
+                      handleLogout();
+                    }}
+                    className="w-full bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
             )}
           </ul>
         </div>
