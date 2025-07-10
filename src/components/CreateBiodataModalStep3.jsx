@@ -75,22 +75,22 @@ const CreateBiodataModalStep3 = ({ formData, onChange, prevStep, onSubmit }) => 
           />
         </div>
 
-        {/* Last Education */}
-        <div>
-          <label className="block mb-1 font-medium">Last Education</label>
-          <select
-            value={formData.lastEducation}
-            onChange={(e) => onChange("lastEducation", e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          >
-            <option value="">Select education</option>
-            <option value="SSC">SSC</option>
-            <option value="HSC">HSC</option>
-            <option value="Bachelor">Bachelor</option>
-            <option value="Masters">Masters</option>
-            <option value="PhD">PhD</option>
-          </select>
-        </div>
+{/* Last Education */}
+<div>
+  <label className="block mb-1 font-medium">Last Education</label>
+  <select
+    value={formData.education} // ✅ was formData.lastEducation
+    onChange={(e) => onChange("education", e.target.value)} // ✅ changed key
+    className="w-full border rounded px-3 py-2"
+  >
+    <option value="">Select education</option>
+    <option value="SSC">SSC</option>
+    <option value="HSC">HSC</option>
+    <option value="Bachelor">Bachelor</option>
+    <option value="Masters">Masters</option>
+    <option value="PhD">PhD</option>
+  </select>
+</div>
 
 
 
