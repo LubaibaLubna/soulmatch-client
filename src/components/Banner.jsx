@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Swal from "sweetalert2";
-import CreateBiodataModal from "../components/CreateBiodataModal"; // updated import
+import { getAuth } from "firebase/auth";
+import { useNavigate, useLocation } from "react-router-dom";
+import CreateBiodataModal from "../components/CreateBiodataModal";
 
 const images = [
   "https://i.ibb.co/v4pN8BfY/pexels-wolrider-32632269.jpg",
@@ -16,6 +18,8 @@ const images = [
 const Banner = () => {
   const [current, setCurrent] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleNext = () => {
     setCurrent((prev) => (prev + 1) % images.length);
@@ -25,10 +29,36 @@ const Banner = () => {
     setCurrent((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  // Auto-slide
   useEffect(() => {
     const timer = setInterval(handleNext, 3000);
     return () => clearInterval(timer);
   }, []);
+
+  // If redirected from login, show modal
+  useEffect(() => {
+    if (location.state?.openModal) {
+      setShowModal(true);
+    }
+  }, [location.state]);
+
+  // Handle profile button
+  const handleCreateProfileClick = () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      Swal.fire({
+        icon: "warning",
+        title: "Please login first to add biodatas",
+        confirmButtonText: "Login Now",
+      }).then(() => {
+        navigate("/login", { state: { from: "modal" } });
+      });
+    } else {
+      setShowModal(true);
+    }
+  };
 
   const handleSuccess = () => {
     Swal.fire({
@@ -68,7 +98,7 @@ const Banner = () => {
         </motion.p>
 
         <motion.button
-          onClick={() => setShowModal(true)}
+          onClick={handleCreateProfileClick}
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}

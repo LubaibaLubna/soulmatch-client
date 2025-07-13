@@ -92,6 +92,39 @@ const CreateBiodataModalStep2 = ({ formData, onChange, nextStep, prevStep }) => 
         </div>
 
 
+
+
+
+        {/* Contact Email (Read-only) */}
+        <div>
+          <label className="block mb-1 font-medium">Contact Email</label>
+          <input
+            type="email"
+            value={formData.contactEmail || ""}
+            readOnly
+            className="w-full border rounded px-3 py-2 bg-gray-100 text-gray-600"
+            placeholder="Your registered email"
+          />
+        </div>
+
+
+
+
+        {/* Mobile Number */}
+        <div>
+          <label className="block mb-1 font-medium">Mobile Number*</label>
+          <input
+            type="tel"
+            value={formData.mobileNumber}
+            onChange={(e) => onChange("mobileNumber", e.target.value)}
+            className="w-full border rounded px-3 py-2"
+            required
+          />
+        </div>
+
+
+
+
       </div>
 
       {/* Buttons */}

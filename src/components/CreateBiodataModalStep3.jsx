@@ -1,15 +1,9 @@
 import { useRef, useState, useEffect } from "react";
 
-
-
-
 const CreateBiodataModalStep3 = ({ formData, onChange, prevStep, onSubmit }) => {
-
-
-      const fileInputRef = useRef();
+  const fileInputRef = useRef();
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  // Show preview if image exists in formData
   useEffect(() => {
     if (formData.profileImage && typeof formData.profileImage !== "string") {
       const fileReader = new FileReader();
@@ -28,12 +22,12 @@ const CreateBiodataModalStep3 = ({ formData, onChange, prevStep, onSubmit }) => 
       onChange("profileImage", file);
     }
   };
+
   return (
     <div>
       <h3 className="text-xl font-bold mb-6 text-pink-600">Step 3: Expectations & Contact</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
         {/* Expected Partner Height */}
         <div>
           <label className="block mb-1 font-medium">Expected Partner Height*</label>
@@ -75,73 +69,36 @@ const CreateBiodataModalStep3 = ({ formData, onChange, prevStep, onSubmit }) => 
           />
         </div>
 
-{/* Last Education */}
-<div>
-  <label className="block mb-1 font-medium">Last Education</label>
-  <select
-    value={formData.education} // ✅ was formData.lastEducation
-    onChange={(e) => onChange("education", e.target.value)} // ✅ changed key
-    className="w-full border rounded px-3 py-2"
-  >
-    <option value="">Select education</option>
-    <option value="SSC">SSC</option>
-    <option value="HSC">HSC</option>
-    <option value="Bachelor">Bachelor</option>
-    <option value="Masters">Masters</option>
-    <option value="PhD">PhD</option>
-  </select>
-</div>
-
-
-
-{/* Contact Email (Read-only) */}
-<div>
-  <label className="block mb-1 font-medium">Contact Email</label>
-  <input
-    type="email"
-    value={formData.contactEmail || ""}
-    readOnly
-    className="w-full border rounded px-3 py-2 bg-gray-100 text-gray-600"
-    placeholder="Your registered email"
-  />
-</div>
-
-
-
-{/* Profile Image Upload */}
-<div>
-  <label className="block mb-1 font-medium">Profile Image*</label>
-  <input
-    type="file"
-    accept="image/*"
-    ref={fileInputRef}
-    onChange={handleFileChange}
-    className="w-full border rounded px-3 py-2"
-  />
-
-  {/* Preview the selected photo */}
-  {previewUrl && (
-    <img
-      src={previewUrl}
-      alt="Preview"
-      className="mt-2 w-32 h-32 object-cover rounded border"
-    />
-  )}
-</div>
-
-
-
-
-        {/* Mobile Number */}
+        {/* Profile Image Upload */}
         <div>
-          <label className="block mb-1 font-medium">Mobile Number*</label>
+          <label className="block mb-1 font-medium">Profile Image*</label>
           <input
-            type="tel"
-            value={formData.mobileNumber}
-            onChange={(e) => onChange("mobileNumber", e.target.value)}
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleFileChange}
             className="w-full border rounded px-3 py-2"
-            required
           />
+          {previewUrl && (
+            <img
+              src={previewUrl}
+              alt="Preview"
+              className="mt-2 w-32 h-32 object-cover rounded border"
+            />
+          )}
+        </div>
+
+        {/* Premium Profile Checkbox */}
+        <div className="col-span-2">
+          <label className="inline-flex items-center mt-2">
+            <input
+              type="checkbox"
+              checked={formData.isPremium}
+              onChange={(e) => onChange("isPremium", e.target.checked)}
+              className="form-checkbox h-4 w-4 text-pink-600"
+            />
+            <span className="ml-2 text-sm text-gray-700 font-medium">Make this a Premium Profile</span>
+          </label>
         </div>
       </div>
 
@@ -178,7 +135,7 @@ function generateHeights() {
     for (let i of inches) {
       const label = `${f}'${i}"`;
       const val = `${f}ft ${i}in`;
-      if ((f === 4 && i < 5) || (f === 6 && i > 7)) continue; // limit range 4'5" to 6'7"
+      if ((f === 4 && i < 5) || (f === 6 && i > 7)) continue;
       heights.push(<option key={val} value={val}>{label}</option>);
     }
   }

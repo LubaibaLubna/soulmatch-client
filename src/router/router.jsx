@@ -5,6 +5,9 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import CreateBiodataModal from "../components/CreateBiodataModal";
 import Biodatas from "../pages/Biodatas";
+import PrivateRoute from "./PrivateRoute";
+import BiodataDetails from "../pages/BiodataDetails";
+import SubmitSuccessStory from "../components/SubmitSuccessStory";
 
 
 export const router = createBrowserRouter([
@@ -25,10 +28,33 @@ export const router = createBrowserRouter([
         Component: Register,
       },
 
-      {
-        path: "/create-biodatamodal",
-        Component: CreateBiodataModal,
-      }, 
+    {
+  path: "/create-biodatamodal",
+  element: (
+    <PrivateRoute>
+      <CreateBiodataModal />
+    </PrivateRoute>
+  ),
+}, 
+
+{
+  path: "biodatas/:id",
+  element: (
+    <PrivateRoute>
+      <BiodataDetails />
+    </PrivateRoute>
+  )
+},
+
+{
+  path: "submit-story",
+  element: (
+    <PrivateRoute>
+      <SubmitSuccessStory />
+    </PrivateRoute>
+  ),
+},
+
 
       {
         path: "biodatas",

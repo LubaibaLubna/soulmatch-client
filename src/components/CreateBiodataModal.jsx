@@ -5,7 +5,7 @@ import CreateBiodataModalStep1 from "./CreateBiodataModalStep1";
 import CreateBiodataModalStep3 from "./CreateBiodataModalStep3";
 import CreateBiodataModalStep2 from "./CreateBiodataModalStep2";
 
-const CreateBiodataModal = ({ onSuccess, onClose }) => {
+const CreateBiodataModal = ({ onSuccess }) => {
   const [step, setStep] = useState(1);
 
   const [formData, setFormData] = useState({
@@ -29,6 +29,7 @@ const CreateBiodataModal = ({ onSuccess, onClose }) => {
     mobileNumber: "",
     religion: "",
     education: "",
+    isPremium: false,
   });
 
   // ✅ Set user's email from Firebase Auth
