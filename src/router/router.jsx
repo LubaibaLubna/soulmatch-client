@@ -47,6 +47,15 @@ export const router = createBrowserRouter([
 },
 
 {
+  path: "/biodata-details/:id",
+  element: (
+    <PrivateRoute>
+      <BiodataDetails />
+    </PrivateRoute>
+  )
+},
+
+{
   path: "submit-story",
   element: (
     <PrivateRoute>
