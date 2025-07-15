@@ -5,44 +5,96 @@ import Swal from "sweetalert2";
 
 const BiodataDetails = () => {
   const { id } = useParams();
-  const [biodata, setBiodata] = useState(null);
   const navigate = useNavigate();
 
+  const [biodata, setBiodata] = useState(null);
+  const [user, setUser] = useState(null);
+  const [similarBiodatas, setSimilarBiodatas] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load current user info
   useEffect(() => {
     const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user) {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
       navigate("/login");
+      return;
     }
+
+    // Fetch user info from backend
+    fetch(`http://localhost:5000/api/users/${currentUser.email}`)
+      .then((res) => res.json())
+      .then((data) => setUser(data))
+      .catch(() => setUser(null));
   }, [navigate]);
 
+  // Fetch biodata details
   useEffect(() => {
+    if (!id) return;
+
+    setLoading(true);
     fetch(`http://localhost:5000/api/biodatas/${id}`)
       .then((res) => res.json())
-      .then((data) => setBiodata(data));
+      .then((data) => {
+        setBiodata(data);
+        setLoading(false);
+
+        // Fetch similar biodatas by type excluding current
+        fetch(`http://localhost:5000/api/similar-biodatas?type=${encodeURIComponent(data.type)}&excludeId=${id}`)
+          .then(res => res.json())
+          .then(similar => setSimilarBiodatas(similar))
+          .catch(() => setSimilarBiodatas([]));
+      })
+      .catch(() => {
+        setBiodata(null);
+        setLoading(false);
+      });
   }, [id]);
 
-  const handleSendInterest = () => {
-    Swal.fire({
-      icon: "success",
-      title: "Interest Sent",
-      text: `You have shown interest in Biodata #${biodata?.biodataId}`
-    });
+  const handleAddFavourite = async () => {
+    if (!user) {
+      Swal.fire("Error", "You must be logged in.", "error");
+      navigate("/login");
+      return;
+    }
+    try {
+      const res = await fetch("http://localhost:5000/api/add-favourite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userEmail: user.email,
+          favouriteBiodataId: biodata._id,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        Swal.fire("Success", "Added to your favourites!", "success");
+      } else {
+        Swal.fire("Error", data.error || "Failed to add favourite", "error");
+      }
+    } catch {
+      Swal.fire("Error", "Failed to add favourite", "error");
+    }
   };
 
-  if (!biodata) {
-    return <div className="text-center py-20 text-gray-600">Loading...</div>;
-  }
+  const handleRequestContact = () => {
+    // Redirect normal users to checkout page
+    navigate(`/checkout/${id}`);
+  };
 
-  const imageUrl = biodata.profileImage?.startsWith("/")
+  if (loading) return <div className="text-center py-20">Loading...</div>;
+  if (!biodata) return <div className="text-center py-20">Biodata not found</div>;
+
+  const imageUrl = biodata.profileImage?.startsWith('/')
     ? `http://localhost:5000${biodata.profileImage}`
     : `http://localhost:5000/uploads/${biodata.profileImage}`;
 
+  const canViewContact = user?.isPremium === true;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-pink-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl overflow-hidden border border-pink-100">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl border border-pink-100 overflow-hidden">
         <div className="grid md:grid-cols-3 gap-6 p-6">
-          {/* Image */}
           <div className="flex justify-center items-center">
             <img
               src={imageUrl}
@@ -51,10 +103,12 @@ const BiodataDetails = () => {
             />
           </div>
 
-          {/* Basic Info */}
           <div className="md:col-span-2 space-y-2">
             <h2 className="text-2xl font-bold text-pink-700">{biodata.name}</h2>
-            <p className="text-sm text-gray-500">Biodata ID: <span className="text-pink-600 font-medium">{biodata.biodataId}</span></p>
+            <p className="text-sm text-gray-500">
+              Biodata ID: <span className="text-pink-600 font-medium">{biodata.biodataId}</span>
+            </p>
+
             <div className="grid grid-cols-2 gap-4 text-sm mt-4">
               <Info label="Type" value={biodata.type} />
               <Info label="Age" value={biodata.age} />
@@ -64,16 +118,15 @@ const BiodataDetails = () => {
               <Info label="Religion" value={biodata.religion} />
               <Info label="Height" value={biodata.height} />
               <Info label="Weight" value={biodata.weight} />
-              <Info label="Mobile" value={biodata.mobileNumber} />
-              <Info label="Email" value={biodata.contactEmail} />
+              {/* Show contact info only if premium */}
+              <Info label="Mobile" value={canViewContact ? biodata.mobileNumber : "Only Premium Members"} />
+              <Info label="Email" value={canViewContact ? biodata.contactEmail : "Only Premium Members"} />
             </div>
           </div>
         </div>
 
-        {/* Divider */}
         <hr className="border-pink-100" />
 
-        {/* Family & Location */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 text-sm">
           <Info label="Father's Name" value={biodata.fatherName} />
           <Info label="Mother's Name" value={biodata.motherName} />
@@ -81,7 +134,6 @@ const BiodataDetails = () => {
           <Info label="Present Division" value={biodata.presentDivision} />
         </div>
 
-        {/* Preferences */}
         <div className="bg-pink-50 px-6 py-4">
           <h3 className="text-lg font-semibold text-pink-600 mb-3">Partner Preferences</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
@@ -91,7 +143,6 @@ const BiodataDetails = () => {
           </div>
         </div>
 
-        {/* Buttons */}
         <div className="flex justify-between items-center px-6 py-4">
           <button
             onClick={() => navigate(-1)}
@@ -100,13 +151,52 @@ const BiodataDetails = () => {
             ← Back
           </button>
 
-          <button
-            onClick={handleSendInterest}
-            className="text-sm bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
-          >
-            ❤️ Send Interest
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleAddFavourite}
+              className="text-sm bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
+            >
+              ⭐ Add to Favourites
+            </button>
+
+            {!canViewContact && (
+              <button
+                onClick={handleRequestContact}
+                className="text-sm bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded"
+              >
+                🔒 Request Contact Info
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Similar biodatas */}
+        {similarBiodatas.length > 0 && (
+          <div className="p-6 text-gray-600">
+            <h3 className="text-xl font-semibold mb-4">Similar Biodatas</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {similarBiodatas.map(similar => (
+                <div
+                  key={similar._id}
+                  onClick={() => navigate(`/biodata-details/${similar._id}`)}
+                  className="cursor-pointer border rounded p-4 hover:shadow-lg"
+                >
+                  <img
+                    src={
+                      similar.profileImage?.startsWith('/')
+                        ? `http://localhost:5000${similar.profileImage}`
+                        : `http://localhost:5000/uploads/${similar.profileImage}`
+                    }
+                    alt={similar.name}
+                    className="w-full h-32 object-cover rounded"
+                  />
+                  <h4 className="mt-2 font-semibold">{similar.name}</h4>
+                  <p className="text-sm text-gray-600">Age: {similar.age}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

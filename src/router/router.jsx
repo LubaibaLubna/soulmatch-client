@@ -8,6 +8,7 @@ import Biodatas from "../pages/Biodatas";
 import PrivateRoute from "./PrivateRoute";
 import BiodataDetails from "../pages/BiodataDetails";
 import SubmitSuccessStory from "../components/SubmitSuccessStory";
+import MyMessages from "../pages/MyMessages";
 
 
 export const router = createBrowserRouter([
@@ -54,6 +55,16 @@ export const router = createBrowserRouter([
     </PrivateRoute>
   )
 },
+
+
+// {
+//   path: "/messages",
+//   element: (
+//     <PrivateRoute>
+//       <MyMessages></MyMessages>
+//     </PrivateRoute>
+//   )
+// },
 
 {
   path: "submit-story",

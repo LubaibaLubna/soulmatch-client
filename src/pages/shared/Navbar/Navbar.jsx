@@ -60,6 +60,10 @@ const Navbar = () => {
           ) : (
             <>
               <li><Link to="/dashboard" className="hover:text-pink-600 transition">Dashboard</Link></li>
+              
+                  {/* <Link to="/messages" className="text-pink-600 hover:underline">
+                    My Messages
+                  </Link> */}
               <li>
                 <button
                   onClick={handleLogout}
@@ -105,6 +109,9 @@ const Navbar = () => {
                   <Link to="/dashboard" onClick={closeMenu} className="block hover:text-pink-600">
                     Dashboard
                   </Link>
+
+
+
                 </li>
                 <li>
                   <button
