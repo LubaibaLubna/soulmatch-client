@@ -2,15 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import Swal from "sweetalert2";
+import { useQuery } from "@tanstack/react-query";
 
 const BiodataDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [biodata, setBiodata] = useState(null);
   const [user, setUser] = useState(null);
-  const [similarBiodatas, setSimilarBiodatas] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   // Load current user info
   useEffect(() => {
@@ -28,28 +26,33 @@ const BiodataDetails = () => {
       .catch(() => setUser(null));
   }, [navigate]);
 
-  // Fetch biodata details
+  // Fetch biodata using TanStack Query
+  const {
+    data: biodata,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["biodata", id],
+    queryFn: async () => {
+      const res = await fetch(`http://localhost:5000/api/biodatas/${id}`);
+      return res.json();
+    },
+    enabled: !!id,
+  });
+
+  const [similarBiodatas, setSimilarBiodatas] = useState([]);
+
   useEffect(() => {
-    if (!id) return;
-
-    setLoading(true);
-    fetch(`http://localhost:5000/api/biodatas/${id}`)
+    if (!biodata) return;
+    fetch(
+      `http://localhost:5000/api/similar-biodatas?type=${encodeURIComponent(
+        biodata.type
+      )}&excludeId=${id}`
+    )
       .then((res) => res.json())
-      .then((data) => {
-        setBiodata(data);
-        setLoading(false);
-
-        // Fetch similar biodatas by type excluding current
-        fetch(`http://localhost:5000/api/similar-biodatas?type=${encodeURIComponent(data.type)}&excludeId=${id}`)
-          .then(res => res.json())
-          .then(similar => setSimilarBiodatas(similar))
-          .catch(() => setSimilarBiodatas([]));
-      })
-      .catch(() => {
-        setBiodata(null);
-        setLoading(false);
-      });
-  }, [id]);
+      .then((similar) => setSimilarBiodatas(similar))
+      .catch(() => setSimilarBiodatas([]));
+  }, [biodata, id]);
 
   const handleAddFavourite = async () => {
     if (!user) {
@@ -78,14 +81,13 @@ const BiodataDetails = () => {
   };
 
   const handleRequestContact = () => {
-    // Redirect normal users to checkout page
     navigate(`/checkout/${id}`);
   };
 
-  if (loading) return <div className="text-center py-20">Loading...</div>;
-  if (!biodata) return <div className="text-center py-20">Biodata not found</div>;
+  if (isLoading) return <div className="text-center py-20">Loading...</div>;
+  if (error || !biodata) return <div className="text-center py-20">Biodata not found</div>;
 
-  const imageUrl = biodata.profileImage?.startsWith('/')
+  const imageUrl = biodata.profileImage?.startsWith("/")
     ? `http://localhost:5000${biodata.profileImage}`
     : `http://localhost:5000/uploads/${biodata.profileImage}`;
 
@@ -118,7 +120,6 @@ const BiodataDetails = () => {
               <Info label="Religion" value={biodata.religion} />
               <Info label="Height" value={biodata.height} />
               <Info label="Weight" value={biodata.weight} />
-              {/* Show contact info only if premium */}
               <Info label="Mobile" value={canViewContact ? biodata.mobileNumber : "Only Premium Members"} />
               <Info label="Email" value={canViewContact ? biodata.contactEmail : "Only Premium Members"} />
             </div>
@@ -170,12 +171,11 @@ const BiodataDetails = () => {
           </div>
         </div>
 
-        {/* Similar biodatas */}
         {similarBiodatas.length > 0 && (
           <div className="p-6 text-gray-600">
             <h3 className="text-xl font-semibold mb-4">Similar Biodatas</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {similarBiodatas.map(similar => (
+              {similarBiodatas.map((similar) => (
                 <div
                   key={similar._id}
                   onClick={() => navigate(`/biodata-details/${similar._id}`)}
@@ -183,7 +183,7 @@ const BiodataDetails = () => {
                 >
                   <img
                     src={
-                      similar.profileImage?.startsWith('/')
+                      similar.profileImage?.startsWith("/")
                         ? `http://localhost:5000${similar.profileImage}`
                         : `http://localhost:5000/uploads/${similar.profileImage}`
                     }
