@@ -10,6 +10,7 @@ import BiodataDetails from "../pages/BiodataDetails";
 import SubmitSuccessStory from "../components/SubmitSuccessStory";
 import Payment from "../pages/Dashboard/Payment";
 import CheckoutPage from "../pages/Dashboard/CheckoutPage";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 
 export const router = createBrowserRouter([
@@ -92,6 +93,19 @@ export const router = createBrowserRouter([
   ),
 },
 
+{
+  path: "/dashboard",
+  element:
+ ( 
+    <PrivateRoute>
+      <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+      ),
+  
+},
+
+
+
 
       {
         path: "biodatas",
@@ -100,10 +114,7 @@ export const router = createBrowserRouter([
 
 
 
-      // {
-      //   path: "dashboard",
-      //   Component: Dashboard,
-      // },
+      
 
       
     ],
