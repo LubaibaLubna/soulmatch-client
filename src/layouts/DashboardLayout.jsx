@@ -1,39 +1,49 @@
-// src/layouts/DashboardLayout.jsx
-import { Outlet, NavLink } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import Sidebar from "./Sidebar";
 
 const DashboardLayout = () => {
-  const { user } = useContext(AuthContext);
-  const isAdmin = user?.role === "admin"; // Ensure role is set when user logs in
+  const { user, loading: authLoading } = useContext(AuthContext);
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user && !authLoading) {
+      navigate("/login");
+      return;
+    }
+
+    if (user?.email) {
+      fetch(`http://localhost:5000/api/users?email=${user.email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setRole(data.role); // 👈 "admin" or "user"
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch role:", err);
+          setLoading(false);
+        });
+    }
+  }, [user, authLoading, navigate]);
+
+  if (authLoading || loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <span className="text-pink-600 font-semibold text-xl">Loading Dashboard...</span>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex min-h-screen text-gray-600">
-      {/* Sidebar */}
-      <aside className="w-64 bg-pink-100 p-4 space-y-4 shadow-md">
-        <h2 className="text-xl font-bold text-pink-700">Dashboard</h2>
+    <div className="flex min-h-screen bg-gray-50">
+      {/* ✅ Pass role to sidebar */}
+      <Sidebar role={role} />
 
-        {!isAdmin ? (
-          <>
-            <NavLink to="/dashboard/edit-biodata" className="block hover:text-pink-600">Edit Biodata</NavLink>
-            <NavLink to="/dashboard/view-biodata" className="block hover:text-pink-600">View Biodata</NavLink>
-            <NavLink to="/dashboard/my-contact-request" className="block hover:text-pink-600">My Contact Request</NavLink>
-            <NavLink to="/dashboard/favourites" className="block hover:text-pink-600">Favourites</NavLink>
-          </>
-        ) : (
-          <>
-            <NavLink to="/dashboard/admin" className="block hover:text-pink-600">Admin Dashboard</NavLink>
-            <NavLink to="/dashboard/manage-users" className="block hover:text-pink-600">Manage Users</NavLink>
-            <NavLink to="/dashboard/approved-premium" className="block hover:text-pink-600">Approved Premium</NavLink>
-            <NavLink to="/dashboard/approved-requests" className="block hover:text-pink-600">Approved Contact Request</NavLink>
-          </>
-        )}
-
-        <NavLink to="/" className="block text-red-500 hover:text-red-700">← Logout</NavLink>
-      </aside>
-
-      {/* Main content */}
-      <main className="flex-1 bg-gray-50 p-6">
+      {/* ✅ Render nested dashboard route */}
+      <main className="flex-1 ml-0 md:ml-64 p-4">
         <Outlet />
       </main>
     </div>

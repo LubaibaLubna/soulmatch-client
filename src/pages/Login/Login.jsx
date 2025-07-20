@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../../firebase/firebase";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,9 +11,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Check if we came from a protected route (like modal trigger)
-  const redirectFrom = location.state?.from;
+  const from = location.state?.from?.pathname || "/";
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -20,32 +19,32 @@ const Login = () => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        // Redirect based on intent
-        if (redirectFrom === "modal") {
-          navigate("/", { state: { openModal: true } });
-        } else {
-          navigate("/");
-        }
+        navigate(from, { replace: true });
       })
       .catch((err) => {
         setError(err.message);
       });
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     setError("");
 
-    signInWithPopup(auth, googleProvider)
-      .then(() => {
-        if (redirectFrom === "modal") {
-          navigate("/", { state: { openModal: true } });
-        } else {
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        setError(err.message);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+
+      // ✅ Save user to MongoDB if not exists
+      await axios.post("http://localhost:5000/api/users", {
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        role: "user",
       });
+
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -82,7 +81,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-pink-400 text-white py-2 rounded hover:bg-pink-600 transition"
+            className="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600 transition"
           >
             Login
           </button>
@@ -99,8 +98,8 @@ const Login = () => {
         </div>
 
         <p className="text-sm mt-4 text-center">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-pink-400 hover:underline">
+          Don&apos;t have an account?{" "}
+          <Link to="/register" className="text-pink-500 hover:underline">
             Register here
           </Link>
         </p>

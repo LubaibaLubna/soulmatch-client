@@ -11,6 +11,7 @@ import SubmitSuccessStory from "../components/SubmitSuccessStory";
 import Payment from "../pages/Dashboard/Payment";
 import CheckoutPage from "../pages/Dashboard/CheckoutPage";
 import DashboardLayout from "../layouts/DashboardLayout";
+import EditBiodata from "../pages/Dashboard/EditBiodata";
 
 
 export const router = createBrowserRouter([
@@ -96,11 +97,17 @@ export const router = createBrowserRouter([
 {
   path: "/dashboard",
   element:
- ( 
+ 
     <PrivateRoute>
       <DashboardLayout></DashboardLayout>
-      </PrivateRoute>
-      ),
+      </PrivateRoute>,
+      children:[
+        {
+          path:"edit-biodata",
+          element: <EditBiodata></EditBiodata>
+        }
+      ]
+     
   
 },
 
