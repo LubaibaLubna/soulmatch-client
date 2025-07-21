@@ -73,7 +73,14 @@ const MyContactRequest = () => {
           <tbody>
             {requests.map((req) => (
               <tr key={req._id} className="border-b hover:bg-gray-50">
-                <td className="px-6 py-4">{req.biodata?.name || "N/A"}</td>
+                <td className="px-6 py-4 flex items-center gap-2">
+                  {req.biodata?.name || "N/A"}
+                  {req.biodata?.isPremium && (
+                    <span className="ml-2 bg-yellow-400 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+                      Premium
+                    </span>
+                  )}
+                </td>
                 <td className="px-6 py-4">{req.biodata?.biodataId || "N/A"}</td>
                 <td className="px-6 py-4">
                   <span
@@ -87,10 +94,10 @@ const MyContactRequest = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  {req.status === "approved" ? req.biodata?.mobileNumber : "---"}
+                  {req.status === "approved" ? req.biodata?.mobileNumber || "N/A" : "---"}
                 </td>
                 <td className="px-6 py-4">
-                  {req.status === "approved" ? req.biodata?.contactEmail : "---"}
+                  {req.status === "approved" ? req.biodata?.contactEmail || "N/A" : "---"}
                 </td>
                 <td className="px-6 py-4">
                   <button
