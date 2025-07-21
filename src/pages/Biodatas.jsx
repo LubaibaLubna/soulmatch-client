@@ -124,15 +124,15 @@ const Biodatas = () => {
             </div>
           </div>
 
-                            <Link
-  to="/submit-story"
-  className="inline-block mt-6 text-pink-600 hover:underline text-sm"
->
-  Want to share your story? Click here
-</Link>
+          <Link
+            to="/submit-story"
+            className="inline-block mt-6 text-pink-600 hover:underline text-sm"
+          >
+            Want to share your story? Click here
+          </Link>
         </div>
 
-        
+
 
         {/* Biodata Cards */}
         <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -155,6 +155,7 @@ const Biodatas = () => {
                 <h3 className="text-lg font-semibold text-pink-700 flex items-center gap-2">
                   <FaUser /> Biodata #{data.biodataId}
                 </h3>
+
                 <p className="text-sm text-gray-600">Type: {data.type}</p>
                 <p className="text-sm text-gray-600">Division: {data.permanentDivision}</p>
                 <p className="text-sm text-gray-600">Age: {data.age}</p>

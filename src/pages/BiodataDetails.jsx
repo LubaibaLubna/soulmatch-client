@@ -10,7 +10,6 @@ const BiodataDetails = () => {
 
   const [user, setUser] = useState(null);
 
-  // Load current user info
   useEffect(() => {
     const auth = getAuth();
     const currentUser = auth.currentUser;
@@ -19,14 +18,12 @@ const BiodataDetails = () => {
       return;
     }
 
-    // Fetch user info from backend
     fetch(`http://localhost:5000/api/users/${currentUser.email}`)
       .then((res) => res.json())
       .then((data) => setUser(data))
       .catch(() => setUser(null));
   }, [navigate]);
 
-  // Fetch biodata using TanStack Query
   const {
     data: biodata,
     isLoading,
@@ -54,31 +51,34 @@ const BiodataDetails = () => {
       .catch(() => setSimilarBiodatas([]));
   }, [biodata, id]);
 
-  const handleAddFavourite = async () => {
-    if (!user) {
-      Swal.fire("Error", "You must be logged in.", "error");
-      navigate("/login");
-      return;
+const handleAddFavourite = async () => {
+  console.log("Add to favourite with:", user?.email, biodata?._id);
+
+  if (!user?.email || !biodata?._id) {
+    Swal.fire("Error", "User or Biodata info missing", "error");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:5000/api/add-favourite", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userEmail: user.email,
+        favouriteBiodataId: biodata._id,
+      }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      Swal.fire("Success", "Added to your favourites!", "success");
+    } else {
+      Swal.fire("Error", data.error || "Failed to add favourite", "error");
     }
-    try {
-      const res = await fetch("http://localhost:5000/api/add-favourite", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userEmail: user.email,
-          favouriteBiodataId: biodata._id,
-        }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        Swal.fire("Success", "Added to your favourites!", "success");
-      } else {
-        Swal.fire("Error", data.error || "Failed to add favourite", "error");
-      }
-    } catch {
-      Swal.fire("Error", "Failed to add favourite", "error");
-    }
-  };
+  } catch (err) {
+    Swal.fire("Error", "Failed to add favourite", "error");
+  }
+};
+
 
   const handleRequestContact = () => {
     navigate(`/checkout/${id}`);

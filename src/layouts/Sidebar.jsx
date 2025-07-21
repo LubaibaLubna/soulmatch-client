@@ -20,7 +20,13 @@ const Sidebar = ({ role }) => {
 
   const toggleSidebar = () => setOpen(!open);
   const closeSidebar = () => setOpen(false);
-  const isActive = (path) => location.pathname === path;
+
+  const isActive = (path) => {
+    if (location.pathname === "/dashboard" && path === "/dashboard/edit-biodata") {
+      return true;
+    }
+    return location.pathname === path || location.pathname.startsWith(path + "/");
+  };
 
   const linkClass = (path) =>
     `flex items-center gap-2 px-4 py-2 rounded transition ${
@@ -30,21 +36,24 @@ const Sidebar = ({ role }) => {
     }`;
 
   return (
-    <aside className="bg-gray-900 md:w-64 w-full md:static fixed h-screen z-50 relative">
-      {/* Mobile Topbar */}
+    <aside
+      className="bg-gray-900 w-full h-screen fixed md:static top-0 left-0 z-[1000] md:w-64 pt-16"
+    >
+      {/* Mobile topbar */}
       <div className="flex justify-between items-center md:hidden px-4 py-3 border-b border-pink-200">
         <h2 className="text-lg font-bold text-pink-600">Dashboard</h2>
         <button
           onClick={toggleSidebar}
           className="text-pink-600 focus:outline-none"
+          aria-label="Toggle sidebar"
         >
           {open ? <FaTimes size={20} /> : <FaBars size={20} />}
         </button>
       </div>
 
-      {/* Sidebar Content */}
+      {/* Navigation Links */}
       <nav
-        className={`md:block ${
+        className={`md:block bg-gray-900 ${
           open ? "block" : "hidden"
         } px-4 py-4 transition-all duration-300`}
       >
@@ -127,30 +136,19 @@ const Sidebar = ({ role }) => {
                 <FaEnvelope /> Approved Contact Request
               </Link>
             </li>
-
-            
           </ul>
-        
-
-
         )}
 
-
-
-
-        <div className="absolute bottom-4  px-4">
-  <button
-    onClick={() => signOut(auth)}
-    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-  >
-    <FaTimes /> Logout
-  </button>
-</div>
-
+        {/* Logout fixed at bottom */}
+        <div className="absolute bottom-4 left-0 w-full px-4">
+          <button
+            onClick={() => signOut(auth)}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+          >
+            <FaTimes /> Logout
+          </button>
+        </div>
       </nav>
-
-
-      
     </aside>
   );
 };

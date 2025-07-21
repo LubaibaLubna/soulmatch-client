@@ -12,6 +12,9 @@ import Payment from "../pages/Dashboard/Payment";
 import CheckoutPage from "../pages/Dashboard/CheckoutPage";
 import DashboardLayout from "../layouts/DashboardLayout";
 import EditBiodata from "../pages/Dashboard/EditBiodata";
+import ViewBiodata from "../pages/Dashboard/ViewBiodata";
+import MyContactRequest from "../pages/Dashboard/MyContactRequest";
+import MyFavourites from "../pages/Dashboard/MyFavourites";
 
 
 export const router = createBrowserRouter([
@@ -105,7 +108,20 @@ export const router = createBrowserRouter([
         {
           path:"edit-biodata",
           element: <EditBiodata></EditBiodata>
-        }
+        },
+         {
+          path:"view-biodata",
+          element: <ViewBiodata></ViewBiodata>
+        },
+         {
+          path:"my-contact-request",
+          element: <MyContactRequest></MyContactRequest>
+        },
+         {
+          path:"favourites",
+          element: <MyFavourites></MyFavourites>
+        },
+
       ]
      
   
@@ -117,7 +133,9 @@ export const router = createBrowserRouter([
       {
         path: "biodatas",
         Component: Biodatas,
-      }
+      },
+
+
 
 
 
