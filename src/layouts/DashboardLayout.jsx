@@ -23,9 +23,13 @@ const DashboardLayout = () => {
           setRole(data.role); // "admin" or "user"
           setLoading(false);
 
-          // Redirect to edit-biodata if path is exactly /dashboard
+          // Role-based redirect only if on exact /dashboard
           if (location.pathname === "/dashboard") {
-            navigate("/dashboard/edit-biodata");
+            if (data.role === "admin") {
+              navigate("/dashboard/admin");
+            } else {
+              navigate("/dashboard/edit-biodata");
+            }
           }
         })
         .catch((err) => {
@@ -45,14 +49,14 @@ const DashboardLayout = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar fixed width and fixed position */}
+      {/* Sidebar */}
       <div className="w-64 fixed top-0 left-0 h-full bg-white shadow-lg z-10">
         <Sidebar role={role} />
       </div>
 
-      {/* Main content area with left margin matching sidebar width */}
+      {/* Main Content */}
       <main className="flex-1 ml-64 p-6 overflow-auto min-h-screen">
-        <Outlet />
+        <Outlet context={{ role }} /> {/* Pass role to children if needed */}
       </main>
     </div>
   );
