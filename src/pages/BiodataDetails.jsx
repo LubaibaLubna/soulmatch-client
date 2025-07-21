@@ -10,19 +10,26 @@ const BiodataDetails = () => {
 
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
-      navigate("/login");
-      return;
-    }
+useEffect(() => {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    navigate("/login");
+    return;
+  }
 
-    fetch(`http://localhost:5000/api/users/${currentUser.email}`)
-      .then((res) => res.json())
-      .then((data) => setUser(data))
-      .catch(() => setUser(null));
-  }, [navigate]);
+  fetch(`http://localhost:5000/api/users/${currentUser.email}`)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("✅ User loaded: ", data);
+      setUser(data);
+    })
+    .catch(() => {
+      setUser(null);
+      console.log("❌ Failed to load user data");
+    });
+}, [navigate]);
+
 
   const {
     data: biodata,
@@ -52,29 +59,37 @@ const BiodataDetails = () => {
   }, [biodata, id]);
 
 const handleAddFavourite = async () => {
-  console.log("Add to favourite with:", user?.email, biodata?._id);
-
-  if (!user?.email || !biodata?._id) {
-    Swal.fire("Error", "User or Biodata info missing", "error");
+  if (!user?.email) {
+    Swal.fire("Error", "User not logged in", "error");
+    return;
+  }
+  if (!biodata?._id) {
+    Swal.fire("Error", "Biodata info missing", "error");
     return;
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/add-favourite", {
+    console.log("📤 Sending favourite:", {
+      userEmail: user.email,
+      favouriteBiodataId: biodata._id.toString(),
+    });
+
+    const res = await fetch("http://localhost:5000/api/favourites", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userEmail: user.email,
-        favouriteBiodataId: biodata._id,
+        biodataId: biodata._id.toString(),
       }),
     });
-    const data = await res.json();
+
+    const result = await res.json();
     if (res.ok) {
-      Swal.fire("Success", "Added to your favourites!", "success");
+      Swal.fire("Success", "Added to favourites!", "success");
     } else {
-      Swal.fire("Error", data.error || "Failed to add favourite", "error");
+      Swal.fire("Error", result.error, "error");
     }
-  } catch (err) {
+  } catch (error) {
     Swal.fire("Error", "Failed to add favourite", "error");
   }
 };
@@ -153,12 +168,16 @@ const handleAddFavourite = async () => {
           </button>
 
           <div className="flex gap-2">
-            <button
-              onClick={handleAddFavourite}
-              className="text-sm bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
-            >
-              ⭐ Add to Favourites
-            </button>
+<button
+  onClick={handleAddFavourite}
+  disabled={!user?.email}
+  className={`text-sm px-4 py-2 rounded ${
+    user?.email ? 'bg-pink-600 hover:bg-pink-700 text-white' : 'bg-gray-300 cursor-not-allowed'
+  }`}
+>
+  ⭐ Add to Favourites
+</button>
+
 
             {!canViewContact && (
               <button
