@@ -7,7 +7,6 @@ import CreateBiodataModal from "../components/CreateBiodataModal";
 import Biodatas from "../pages/Biodatas";
 import PrivateRoute from "./PrivateRoute";
 import BiodataDetails from "../pages/BiodataDetails";
-import SubmitSuccessStory from "../components/SubmitSuccessStory";
 import Payment from "../pages/Dashboard/Payment";
 import CheckoutPage from "../pages/Dashboard/CheckoutPage";
 import DashboardLayout from "../layouts/DashboardLayout";
@@ -19,6 +18,9 @@ import AdminDashboard from "../pages/Dashboard/AdminDashboard/AdminDashboard";
 import ApprovedContactRequest from "../pages/Dashboard/AdminDashboard/ApprovedContactRequest";
 import ApprovedPremium from "../pages/Dashboard/AdminDashboard/ApprovedPremium";
 import ManageUsers from "../pages/Dashboard/AdminDashboard/ManageUsers";
+import SubmitSuccessStory from "../components/GotMarried/SubmitSuccessStory";
+import AdminSuccessStories from "../pages/Dashboard/AdminDashboard/AdminSuccessStories";
+import AdminSuccessStoryTable from "../pages/Dashboard/AdminDashboard/AdminSuccessStoryTable";
 
 
 export const router = createBrowserRouter([
@@ -93,7 +95,7 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "submit-story",
+        path: "got-married",
         element: (
           <PrivateRoute>
             <SubmitSuccessStory />
@@ -129,18 +131,26 @@ export const router = createBrowserRouter([
             path: "admin",
             element: <AdminDashboard></AdminDashboard>
           },
-                   {
-          path:"manage-users",
-          element: <ManageUsers></ManageUsers>
-        },
-                 {
-          path:"approved-premium",
-          element: <ApprovedPremium></ApprovedPremium>
-        },
-                 {
-          path:"approved-contact-request",
-          element: <ApprovedContactRequest></ApprovedContactRequest>
-        },
+          {
+            path: "success-stories",
+            element: <AdminSuccessStories />
+          },
+          {
+            path: "/dashboard/successStoryTable",
+            element: <AdminSuccessStoryTable></AdminSuccessStoryTable>
+          },
+          {
+            path: "manage-users",
+            element: <ManageUsers></ManageUsers>
+          },
+          {
+            path: "approved-premium",
+            element: <ApprovedPremium></ApprovedPremium>
+          },
+          {
+            path: "approved-contact-request",
+            element: <ApprovedContactRequest></ApprovedContactRequest>
+          },
 
         ]
 

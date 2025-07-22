@@ -2,8 +2,8 @@ import React from 'react';
 import Banner from '../../../components/Banner';
 import PremiumMembers from '../../../components/PremiumMembers';
 import HowItWorks from '../../../components/HowItWorks';
-import SuccessCounter from '../../../components/SuccessCounter';
-import SuccessStorySection from '../../../components/SuccessStorySection';
+import SuccessStorySection from '../../../components/GotMarried/SuccessStorySection';
+import SuccessCounter from '../../../components/GotMarried/SuccessCounter copy';
 
 const Home = () => {
     return (

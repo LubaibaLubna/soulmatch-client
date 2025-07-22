@@ -125,7 +125,7 @@ const Biodatas = () => {
           </div>
 
           <Link
-            to="/submit-story"
+            to="/got-married"
             className="inline-block mt-6 text-pink-600 hover:underline text-sm"
           >
             Want to share your story? Click here

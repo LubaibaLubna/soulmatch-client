@@ -1,21 +1,36 @@
 import { useEffect, useState } from "react";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/admin/dashboard-stats")
+    fetch("http://localhost:5000/api/biodata-stats")
       .then((res) => res.json())
       .then((data) => {
         setStats(data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Failed to fetch dashboard stats:", err);
+        console.error("Failed to fetch stats:", err);
         setLoading(false);
       });
   }, []);
+
+  const COLORS = ["#FF6384", "#36A2EB", "#FFCE56", "#A569BD"];
+
+  const chartData = stats
+    ? [
+        { name: "Male", value: stats.maleCount },
+        { name: "Female", value: stats.femaleCount },
+        {
+          name: "Others",
+          value: stats.total - stats.maleCount - stats.femaleCount,
+        },
+        { name: "Married", value: stats.marriageCount },
+      ]
+    : [];
 
   if (loading) {
     return (
@@ -34,28 +49,40 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="p-6 bg-white rounded shadow-md max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8 text-pink-700">Admin Dashboard</h1>
+    <div className="p-6 max-w-5xl mx-auto">
+      <h2 className="text-3xl font-bold text-pink-600 mb-6">📊 Admin Dashboard</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <StatCard label="Total Biodata" value={stats.totalBiodataCount} />
-        <StatCard label="Male Biodata" value={stats.maleBiodataCount} />
-        <StatCard label="Female Biodata" value={stats.femaleBiodataCount} />
-        <StatCard label="Premium Biodata" value={stats.premiumBiodataCount} />
-        <StatCard
-          label="Total Revenue"
-          value={`৳ ${stats.totalRevenue.toLocaleString()}`}
-        />
+      <div className="grid md:grid-cols-2 gap-6 items-center">
+        <div className="text-lg text-gray-700 space-y-2">
+          <p>Total Biodatas: <strong>{stats.total}</strong></p>
+          <p>Male: <strong>{stats.maleCount}</strong></p>
+          <p>Female: <strong>{stats.femaleCount}</strong></p>
+          <p>Married Couples: <strong>{stats.marriageCount}</strong></p>
+        </div>
+
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart>
+            <Pie
+              data={chartData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={100}
+              fill="#8884d8"
+              label
+            >
+              {chartData.map((_, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
 };
-
-const StatCard = ({ label, value }) => (
-  <div className="p-4 border rounded-lg shadow-sm bg-pink-50 text-center">
-    <p className="text-gray-500 font-semibold mb-2">{label}</p>
-    <p className="text-2xl font-bold text-pink-700">{value}</p>
-  </div>
-);
 
 export default AdminDashboard;

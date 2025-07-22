@@ -3,10 +3,12 @@ import Swal from "sweetalert2";
 
 const SubmitSuccessStory = () => {
   const [form, setForm] = useState({
+    selfBiodataId: "",
+    partnerBiodataId: "",
     marriageDate: "",
     stars: 5,
     story: "",
-    coupleImage: null
+    coupleImage: null,
   });
 
   const handleChange = (e) => {
@@ -21,7 +23,9 @@ const SubmitSuccessStory = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.marriageDate || !form.story || !form.coupleImage) {
+    const { selfBiodataId, partnerBiodataId, marriageDate, story, coupleImage } = form;
+
+    if (!selfBiodataId || !partnerBiodataId || !marriageDate || !story || !coupleImage) {
       Swal.fire("Error", "Please fill all fields", "error");
       return;
     }
@@ -34,14 +38,21 @@ const SubmitSuccessStory = () => {
     try {
       const res = await fetch("http://localhost:5000/api/success-stories", {
         method: "POST",
-        body: formData
+        body: formData,
       });
 
       const data = await res.json();
 
       if (res.ok) {
         Swal.fire("Success", "Your story has been submitted!", "success");
-        setForm({ marriageDate: "", stars: 5, story: "", coupleImage: null });
+        setForm({
+          selfBiodataId: "",
+          partnerBiodataId: "",
+          marriageDate: "",
+          stars: 5,
+          story: "",
+          coupleImage: null,
+        });
       } else {
         Swal.fire("Error", data.error || "Something went wrong", "error");
       }
@@ -55,6 +66,32 @@ const SubmitSuccessStory = () => {
       <h3 className="text-2xl font-bold text-center text-pink-600 mb-6">📨 Submit Your Success Story</h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block font-medium mb-1">Your Biodata ID</label>
+          <input
+            type="text"
+            name="selfBiodataId"
+            value={form.selfBiodataId}
+            onChange={handleChange}
+            className="w-full border rounded px-3 py-2"
+            placeholder="Enter your biodata ID"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">Partner's Biodata ID</label>
+          <input
+            type="text"
+            name="partnerBiodataId"
+            value={form.partnerBiodataId}
+            onChange={handleChange}
+            className="w-full border rounded px-3 py-2"
+            placeholder="Enter partner's biodata ID"
+            required
+          />
+        </div>
+
         <div>
           <label className="block font-medium mb-1">Marriage Date</label>
           <input
@@ -76,7 +113,9 @@ const SubmitSuccessStory = () => {
             className="w-full border rounded px-3 py-2"
           >
             {[1, 2, 3, 4, 5].map((s) => (
-              <option key={s} value={s}>{s} Star{s > 1 && "s"}</option>
+              <option key={s} value={s}>
+                {s} Star{s > 1 && "s"}
+              </option>
             ))}
           </select>
         </div>
