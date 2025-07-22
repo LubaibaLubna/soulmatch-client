@@ -13,19 +13,32 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
-  const handleLogin = (e) => {
+  // Handle Email/Password Login
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigate(from, { replace: true });
-      })
-      .catch((err) => {
-        setError(err.message);
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+
+      // Send to backend to save user and get JWT token
+      const res = await axios.post("http://localhost:5000/api/users", {
+        name: user.displayName || "Email User",
+        email: user.email,
+        photoURL: user.photoURL || "",
+        role: "user",
       });
+
+      // Save JWT token in localStorage
+      localStorage.setItem("soulmatch-token", res.data.token);
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.error || err.message);
+    }
   };
 
+  // Handle Google Login
   const handleGoogleLogin = async () => {
     setError("");
 
@@ -33,17 +46,17 @@ const Login = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      // ✅ Save user to MongoDB if not exists
-      await axios.post("http://localhost:5000/api/users", {
+      const res = await axios.post("http://localhost:5000/api/users", {
         name: user.displayName,
         email: user.email,
         photoURL: user.photoURL,
         role: "user",
       });
 
+      localStorage.setItem("soulmatch-token", res.data.token);
       navigate(from, { replace: true });
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message);
     }
   };
 

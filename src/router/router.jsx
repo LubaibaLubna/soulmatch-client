@@ -69,15 +69,6 @@ export const router = createBrowserRouter([
       },
 
 
-      // {
-      //   path: "/messages",
-      //   element: (
-      //     <PrivateRoute>
-      //       <MyMessages></MyMessages>
-      //     </PrivateRoute>
-      //   )
-      // },
-
 
 
       {

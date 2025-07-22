@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaCrown } from "react-icons/fa"; // 👑 Premium Icon
 
 const PremiumMembers = () => {
   const [biodatas, setBiodatas] = useState([]);
@@ -7,8 +9,8 @@ const PremiumMembers = () => {
 
   useEffect(() => {
     fetch("http://localhost:5000/api/premium-biodatas")
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         const sorted = [...data].sort((a, b) =>
           sortOrder === "asc" ? a.age - b.age : b.age - a.age
         );
@@ -17,39 +19,82 @@ const PremiumMembers = () => {
   }, [sortOrder]);
 
   return (
-    <section className="py-10 bg-gray-50 text-gray-700">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">Premium Members</h2>
+    <section className="py-12 bg-gradient-to-b from-pink-50 to-white text-gray-800">
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-4xl font-extrabold text-center text-pink-600 mb-10">
+          Premium Members
+        </h2>
 
-        <div className="mb-4 text-right">
+        <div className="mb-6 flex justify-end">
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
-            className="border px-3 py-2 rounded"
+            className="border border-pink-300 text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
           >
             <option value="asc">Age: Ascending</option>
             <option value="desc">Age: Descending</option>
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {biodatas.map((item) => (
-            <div key={item._id} className="bg-white shadow rounded p-4 text-center">
-              <img
-                src={`http://localhost:5000${item.profileImage}`}
-                alt={item.name}
-                className="w-32 h-32 object-cover mx-auto rounded-full"
-              />
-              <h3 className="mt-2 text-lg font-semibold">{item.name}</h3>
-              <p>{item.type} | Age: {item.age}</p>
-              <p>{item.permanentDivision}</p>
-              <p>{item.occupation}</p>
-              <Link to={`/biodatas/${item._id}`}>
-                <button className="mt-3 bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600">
-                  View Profile
-                </button>
-              </Link>
-            </div>
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {biodatas.map((item, index) => (
+            <motion.div
+              key={item._id}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              whileHover={{ scale: 1.03 }}
+              className="relative bg-white border border-gray-200 rounded-xl shadow-xl group hover:shadow-2xl transition-all duration-300 overflow-hidden"
+            >
+              {/* Premium Icon */}
+              <div className="absolute top-3 right-3 z-20 bg-yellow-400 text-white p-2 rounded-full shadow-md">
+                <FaCrown className="text-sm" title="Premium Member" />
+              </div>
+
+              {/* Animated Background Glow */}
+              <div className="absolute inset-0 z-0 bg-gradient-to-br from-pink-100 via-white to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
+
+              <div className="relative z-10 p-5">
+                {/* Square Image */}
+                <div className="w-full h-56 overflow-hidden mb-3 rounded-md relative">
+                  <img
+                    src={`http://localhost:5000${item.profileImage}`}
+                    alt={item.name}
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+
+                {/* Centered Name */}
+                <h3 className="text-xl font-bold text-center text-pink-600 mb-4">{item.name}</h3>
+
+                {/* Two-Column Details */}
+                <div className="grid grid-cols-2 text-sm gap-y-2 mb-4">
+                  <div>
+                    <p className="text-gray-600 font-medium">Biodata ID: {item.biodataId}</p>
+                
+                  </div>
+                  <div>
+                    <p className="text-gray-600 font-medium">Type / Age: {item.type} / {item.age}</p>
+                  
+                  </div>
+                  <div>
+                    <p className="text-gray-600 font-medium">Division: {item.permanentDivision}</p>
+                    
+                  </div>
+                  <div>
+                    <p className="text-gray-600 font-medium">Occupation: {item.occupation}</p>
+                   
+                  </div>
+                </div>
+
+                {/* View Button */}
+                <Link to={`/biodatas/${item._id}`}>
+                  <button className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-md font-semibold transition">
+                    View Profile
+                  </button>
+                </Link>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>

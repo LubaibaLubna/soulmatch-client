@@ -5,7 +5,7 @@ import animationLottie from '../../../assets/lotties/animation.json';
 
 const Footer = () => {
     return (
-        <footer className="bg-gray-100 pt-32 mt-32 pb-5 relative z-10 font-body">
+        <footer className="bg-gray-100 pt-32 mt-50 pb-5 relative z-10 font-body">
             {/* Call to Action */}
             {/* Call to Action */}
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 md:w-3/4 bg-gradient-to-r from-pink-600 via-rose-500 to-purple-500 p-6 md:p-10 flex flex-col md:flex-row items-center justify-between text-center md:text-left rounded-2xl shadow-lg z-20 text-white">
@@ -69,12 +69,26 @@ const Footer = () => {
                             transition={{ repeat: Infinity, duration: 2 }}
                         />
                     </h3>
+
                     <div className="grid grid-cols-3 gap-2">
-                        {[1, 2, 3, 4, 5, 6].map((_, idx) => (
-                            <div key={idx} className="w-full h-16 bg-gray-700 rounded"></div>
+                        {[
+                            "https://i.ibb.co/YFj50fRw/pexels-jonathanborba-3738671.jpg",
+                            "https://i.ibb.co/NdYx4fKs/pexels-misha-earle-366060-1777846.jpg",
+                            "https://i.ibb.co/kgpZJM3W/pexels-yuksel-kocaman-776590-1640057.jpg",
+                            "https://i.ibb.co/XZqv9Nfx/pexels-jonathanborba-2917380.jpg",
+                            "https://i.ibb.co/ycK5k2xD/pexels-imagestudio-1488324.jpg",
+                            "https://i.ibb.co/7JpnqpSD/pexels-mkvisuals-2781104.jpg",
+                        ].map((url, idx) => (
+                            <img
+                                key={idx}
+                                src={url}
+                                alt={`Gallery ${idx + 1}`}
+                                className="w-full h-20 object-cover rounded"
+                            />
                         ))}
                     </div>
                 </div>
+
 
                 {/* Newsletter */}
                 <div>
