@@ -22,24 +22,23 @@ const Register = () => {
     }
 
     try {
-      // ✅ Firebase create account
+      // Firebase create account
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-      // ✅ Firebase update profile
+      // Firebase update profile
       await updateProfile(userCredential.user, {
         displayName: name,
         photoURL: photoURL,
       });
 
-      // ✅ Save user to MongoDB with role
+      // Save user to MongoDB
       await axios.post("http://localhost:5000/api/users", {
         email,
         name,
-        role: "user", // or "admin"
+        role: "user",
         photoURL,
       });
 
-      // ✅ Redirect to home
       navigate("/");
     } catch (err) {
       setError(err.message);
@@ -47,13 +46,26 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="max-w-md w-full bg-white p-6 rounded-lg text-gray-600 shadow-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">Create a SoulMatch Account</h2>
+    <div
+      className="min-h-screen flex items-center justify-center px-4 relative"
+      style={{
+        backgroundImage: "url('https://i.ibb.co/5gnVZq3W/pexels-asadphoto-1024993.jpg')", // ✅ Replace this with your own link
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0  bg-opacity-60 z-0"></div>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+      {/* Form */}
+      <div className="relative z-10 w-full max-w-md bg-white bg-opacity-90 backdrop-blur-md p-4 rounded-xl shadow-lg border border-gray-200 text-gray-700">
+        <h2 className="text-3xl font-bold text-center text-pink-600 mb-6 font-heading">
+          Create Your Account
+        </h2>
 
-        <form onSubmit={handleRegister} className="space-y-4">
+        {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
+
+        <form onSubmit={handleRegister} className="space-y-5">
           <div>
             <label className="block text-sm font-medium mb-1">Name</label>
             <input
@@ -99,15 +111,15 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700 transition"
+            className="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700 transition font-medium"
           >
             Register
           </button>
         </form>
 
-        <p className="text-sm mt-4 text-center">
+        <p className="text-sm mt-5 text-center">
           Already have an account?{" "}
-          <Link to="/login" className="text-pink-600 hover:underline">
+          <Link to="/login" className="text-pink-600 hover:underline font-medium">
             Login here
           </Link>
         </p>

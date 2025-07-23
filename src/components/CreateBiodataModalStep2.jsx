@@ -1,4 +1,27 @@
+import { useState, useEffect } from "react";
+
 const CreateBiodataModalStep2 = ({ formData, onChange, nextStep, prevStep }) => {
+  const [mobileError, setMobileError] = useState("");
+
+  // ✅ Handle mobile number input with validation
+  const handleMobileChange = (value) => {
+    const cleaned = value.replace(/\s+/g, "");
+    const validPattern = /^(?:\+8801|01)[0-9]{9}$/;
+
+    if (!validPattern.test(cleaned)) {
+      setMobileError("Enter a valid Bangladeshi mobile number");
+    } else {
+      setMobileError("");
+    }
+
+    // Always store with +880 prefix
+    const normalized = cleaned.startsWith("01")
+      ? "+88" + cleaned
+      : cleaned;
+
+    onChange("mobileNumber", normalized);
+  };
+
   return (
     <div>
       <h3 className="text-xl font-bold mb-6 text-pink-600">Step 2: Family & Location</h3>
@@ -31,7 +54,6 @@ const CreateBiodataModalStep2 = ({ formData, onChange, nextStep, prevStep }) => 
             <option value="Job">Job</option>
             <option value="Housewife">Housewife</option>
             <option value="Business">Business</option>
-            {/* Add more as needed */}
           </select>
         </div>
 
@@ -48,7 +70,6 @@ const CreateBiodataModalStep2 = ({ formData, onChange, nextStep, prevStep }) => 
             <option value="Fair">Fair</option>
             <option value="Wheatish">Wheatish</option>
             <option value="Dark">Dark</option>
-            {/* Add more if needed */}
           </select>
         </div>
 
@@ -91,10 +112,6 @@ const CreateBiodataModalStep2 = ({ formData, onChange, nextStep, prevStep }) => 
           />
         </div>
 
-
-
-
-
         {/* Contact Email (Read-only) */}
         <div>
           <label className="block mb-1 font-medium">Contact Email</label>
@@ -107,24 +124,20 @@ const CreateBiodataModalStep2 = ({ formData, onChange, nextStep, prevStep }) => 
           />
         </div>
 
-
-
-
-        {/* Mobile Number */}
+        {/* Mobile Number (Bangladesh format) */}
         <div>
           <label className="block mb-1 font-medium">Mobile Number*</label>
           <input
             type="tel"
             value={formData.mobileNumber}
-            onChange={(e) => onChange("mobileNumber", e.target.value)}
+            onChange={(e) => handleMobileChange(e.target.value)}
             className="w-full border rounded px-3 py-2"
             required
           />
+          {mobileError && (
+            <p className="text-sm text-red-500 mt-1">{mobileError}</p>
+          )}
         </div>
-
-
-
-
       </div>
 
       {/* Buttons */}
@@ -139,7 +152,8 @@ const CreateBiodataModalStep2 = ({ formData, onChange, nextStep, prevStep }) => 
         <button
           type="button"
           onClick={nextStep}
-          className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
+          disabled={!!mobileError}
+          className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded disabled:opacity-50"
         >
           Next
         </button>

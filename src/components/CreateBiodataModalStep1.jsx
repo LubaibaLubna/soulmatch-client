@@ -1,8 +1,6 @@
-
+import { useEffect, useState } from "react";
 
 const CreateBiodataModalStep1 = ({ formData, onChange, nextStep }) => {
-
-
   const generateHeightOptions = () => {
     const options = [];
     for (let ft = 4; ft <= 6; ft++) {
@@ -15,17 +13,53 @@ const CreateBiodataModalStep1 = ({ formData, onChange, nextStep }) => {
   };
 
   const generateWeightOptions = () => {
-    const options = [];
-    for (let w = 35; w <= 150; w += 1) {
-      options.push(`${w}kg`);
+    const weights = [];
+    for (let w = 35; w <= 110; w++) {
+      weights.push(`${w}kg`);
     }
-    return options;
+    return weights.sort(() => 0.5 - Math.random());
   };
+
+  const years = Array.from({ length: 2010 - 1970 + 1 }, (_, i) => 1970 + i);
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [days, setDays] = useState([]);
+  const [selectedDay, setSelectedDay] = useState("");
+
+  // ✅ Generate days based on year and month
+  useEffect(() => {
+    if (selectedYear && selectedMonth) {
+      const lastDay = new Date(selectedYear, selectedMonth, 0).getDate();
+      setDays(Array.from({ length: lastDay }, (_, i) => i + 1));
+    }
+  }, [selectedYear, selectedMonth]);
+
+  // ✅ When full DOB is selected, update dob and auto calculate age
+  useEffect(() => {
+    if (selectedYear && selectedMonth && selectedDay) {
+      const dobString = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`;
+      onChange("dob", dobString);
+
+      // ✅ Calculate Age
+      const today = new Date();
+      const birthDate = new Date(dobString);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      onChange("age", age);
+    }
+  }, [selectedYear, selectedMonth, selectedDay]);
 
   return (
     <div>
       <h3 className="text-xl font-bold mb-4">Step 1: Basic Info</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
         {/* Biodata Type */}
         <div>
           <label className="block mb-1 font-medium">Biodata Type*</label>
@@ -53,22 +87,47 @@ const CreateBiodataModalStep1 = ({ formData, onChange, nextStep }) => {
           />
         </div>
 
-
-
         {/* Date of Birth */}
-        <div>
+        <div className="col-span-1 md:col-span-2">
           <label className="block mb-1 font-medium">Date of Birth*</label>
-          <input
-            type="date"
-            min="1980-01-01"
-            max={new Date().toISOString().split("T")[0]}
-            value={formData.dob}
-            onChange={(e) => onChange("dob", e.target.value)}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-        </div>
+          <div className="grid grid-cols-3 gap-2">
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="border rounded px-2 py-2"
+              required
+            >
+              <option value="">Year</option>
+              {years.map((y) => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
 
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="border rounded px-2 py-2"
+              required
+            >
+              <option value="">Month</option>
+              {months.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+
+            <select
+              value={selectedDay}
+              onChange={(e) => setSelectedDay(e.target.value)}
+              className="border rounded px-2 py-2"
+              required
+            >
+              <option value="">Day</option>
+              {days.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          </div>
+        </div>
 
         {/* Permanent Division */}
         <div>
@@ -141,32 +200,13 @@ const CreateBiodataModalStep1 = ({ formData, onChange, nextStep }) => {
             ))}
           </select>
         </div>
-
-
-        {/* Last Education */}
-        <div>
-          <label className="block mb-1 font-medium">Last Education</label>
-          <select
-            value={formData.education} // ✅ was formData.lastEducation
-            onChange={(e) => onChange("education", e.target.value)} // ✅ changed key
-            className="w-full border rounded px-3 py-2"
-          >
-            <option value="">Select education</option>
-            <option value="SSC">SSC</option>
-            <option value="HSC">HSC</option>
-            <option value="Bachelor">Bachelor</option>
-            <option value="Masters">Masters</option>
-            <option value="PhD">PhD</option>
-          </select>
-        </div>
-
       </div>
 
-      <div className="text-right mt-4">
+      <div className="text-right mt-6">
         <button
           type="button"
           onClick={nextStep}
-          className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
+          className="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2 rounded"
         >
           Next
         </button>

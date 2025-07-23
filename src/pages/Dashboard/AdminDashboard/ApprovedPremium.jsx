@@ -58,7 +58,7 @@ const ApprovedPremium = () => {
       ) : pending.length === 0 ? (
         <p className="text-gray-500">No premium request found.</p>
       ) : (
-        <table className="w-full border border-gray-300 text-sm">
+        <table className="w-full border border-gray-300 text-sm text-gray-700">
           <thead className="bg-pink-100">
             <tr>
               <th className="border px-4 py-2 text-left">Name</th>

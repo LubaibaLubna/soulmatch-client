@@ -88,18 +88,24 @@ const CreateBiodataModalStep3 = ({ formData, onChange, prevStep, onSubmit }) => 
           )}
         </div>
 
-        {/* Premium Profile Checkbox */}
-        <div className="col-span-2">
-          <label className="inline-flex items-center mt-2">
-            <input
-              type="checkbox"
-              checked={formData.isPremium}
-              onChange={(e) => onChange("isPremium", e.target.checked)}
-              className="form-checkbox h-4 w-4 text-pink-600"
-            />
-            <span className="ml-2 text-sm text-gray-700 font-medium">Make this a Premium Profile</span>
-          </label>
+         {/* Last Education */}
+        <div>
+          <label className="block mb-1 font-medium">Last Education</label>
+          <select
+            value={formData.education}
+            onChange={(e) => onChange("education", e.target.value)}
+            className="w-full border rounded px-3 py-2"
+          >
+            <option value="">Select education</option>
+            <option value="SSC">SSC</option>
+            <option value="HSC">HSC</option>
+            <option value="Bachelor">Bachelor</option>
+            <option value="Masters">Masters</option>
+            <option value="PhD">PhD</option>
+          </select>
         </div>
+
+
       </div>
 
       {/* Navigation Buttons */}

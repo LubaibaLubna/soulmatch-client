@@ -10,6 +10,8 @@ const SuccessCounter = () => {
     marriageCount: 0,
   });
 
+  const [startCount, setStartCount] = useState(false);
+
   useEffect(() => {
     fetch("http://localhost:5000/api/biodata-stats")
       .then((res) => res.json())
@@ -18,57 +20,50 @@ const SuccessCounter = () => {
   }, []);
 
   const counters = [
-    {
-      label: "Total Biodatas",
-      value: stats.total,
-      icon: "📄",
-      color: "bg-blue-100 text-blue-600",
-    },
-    {
-      label: "Male Biodatas",
-      value: stats.maleCount,
-      icon: "👦",
-      color: "bg-sky-100 text-sky-600",
-    },
-    {
-      label: "Female Biodatas",
-      value: stats.femaleCount,
-      icon: "👧",
-      color: "bg-pink-100 text-pink-600",
-    },
-    {
-      label: "Marriages Completed",
-      value: stats.marriageCount,
-      icon: "💍",
-      color: "bg-green-100 text-green-600",
-    },
+    { label: "Total Biodatas", value: stats.total, icon: "📄" },
+    { label: "Male Biodatas", value: stats.maleCount, icon: "👦" },
+    { label: "Female Biodatas", value: stats.femaleCount, icon: "👧" },
+    { label: "Marriages Completed", value: stats.marriageCount, icon: "💍" },
   ];
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">
-          Our Success at a Glance
-        </h2>
+    <section className="py-10 bg-gray-800 text-white">
+      <div className="max-w-4xl mx-auto px-4">
+  
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {counters.map((counter, i) => (
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          onViewportEnter={() => setStartCount(true)}
+        >
+          {counters.map((counter, index) => (
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              key={index}
+              initial={{ y: 30, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.2 }}
-              className={`flex flex-col items-center p-6 rounded-lg shadow ${counter.color}`}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+              className="space-y-3"
             >
-              <div className="text-4xl mb-2">{counter.icon}</div>
-              <h3 className="text-3xl font-bold">
-                <CountUp end={counter.value} duration={2} />
-              </h3>
-              <p className="mt-2 text-sm font-medium">{counter.label}</p>
+              <div className="text-3xl">{counter.icon}</div>
+              <div className="text-4xl font-bold text-pink-500">
+                {startCount && (
+                  <CountUp
+                    start={0}
+                    end={counter.value}
+                    duration={2}
+                    useEasing={false}
+                    useGrouping={true}
+                  />
+                )}
+              </div>
+              <p className="text-base font-medium text-gray-300">
+                {counter.label}
+              </p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

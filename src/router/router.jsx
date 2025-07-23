@@ -21,6 +21,8 @@ import ManageUsers from "../pages/Dashboard/AdminDashboard/ManageUsers";
 import SubmitSuccessStory from "../components/GotMarried/SubmitSuccessStory";
 import AdminSuccessStories from "../pages/Dashboard/AdminDashboard/AdminSuccessStories";
 import AdminSuccessStoryTable from "../pages/Dashboard/AdminDashboard/AdminSuccessStoryTable";
+import Contact from "../pages/Contact";
+import About from "../pages/About";
 
 
 export const router = createBrowserRouter([
@@ -39,6 +41,14 @@ export const router = createBrowserRouter([
       {
         path: "register",
         Component: Register,
+      },
+        {
+        path: "contact",
+        Component: Contact,
+      },
+              {
+        path: "about",
+        Component: About,
       },
 
       {

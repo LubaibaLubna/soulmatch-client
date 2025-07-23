@@ -37,8 +37,8 @@ const EditBiodata = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-white rounded shadow">
-      <h1 className="text-3xl font-bold mb-6">Edit Your Biodata</h1>
+    <div className="max-w-4xl mx-auto p-4 bg-white  rounded shadow">
+      <h1 className="text-3xl text-pink-600 font-bold mb-6">Edit Your Biodata</h1>
       <BiodataForm
         initialData={biodata}
         onSuccess={() => navigate("/dashboard")}

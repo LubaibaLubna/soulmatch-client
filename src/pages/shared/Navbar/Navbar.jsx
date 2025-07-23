@@ -26,7 +26,7 @@ const Navbar = () => {
         logout()
           .then(() => {
             Swal.fire("Logged Out!", "You have been logged out successfully.", "success");
-            navigate("/"); // Redirect to login after logout
+            navigate("/"); 
           })
           .catch((err) => {
             Swal.fire("Error!", err.message, "error");
