@@ -60,7 +60,7 @@ const handleSubmit = async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/biodatas", {
+    const res = await fetch("https://ass-12-server-wheat.vercel.app/api/biodatas", {
       method: "POST",
       // ❌ DO NOT include 'Content-Type'. Let browser set it automatically
       body: form,

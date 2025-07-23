@@ -36,7 +36,7 @@ const SubmitSuccessStory = () => {
     });
 
     try {
-      const res = await fetch("http://localhost:5000/api/success-stories", {
+      const res = await fetch("https://ass-12-server-wheat.vercel.app/api/success-stories", {
         method: "POST",
         body: formData,
       });

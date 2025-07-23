@@ -65,8 +65,8 @@ const BiodataForm = ({ initialData = null, onSuccess }) => {
     try {
       const method = initialData ? "PUT" : "POST";
       const url = initialData
-        ? `http://localhost:5000/api/biodatas/${initialData._id}`
-        : "http://localhost:5000/api/biodatas";
+        ? `https://ass-12-server-wheat.vercel.app/api/biodatas/${initialData._id}`
+        : "https://ass-12-server-wheat.vercel.app/api/biodatas";
 
       const res = await fetch(url, {
         method,

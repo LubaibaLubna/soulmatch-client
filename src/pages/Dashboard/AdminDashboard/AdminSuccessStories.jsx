@@ -6,7 +6,7 @@ const AdminSuccessStories = () => {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/success-stories")
+    fetch("https://ass-12-server-wheat.vercel.app/api/success-stories")
       .then((res) => res.json())
       .then(setStories)
       .catch(() => setStories([]));
@@ -35,7 +35,7 @@ const AdminSuccessStories = () => {
                     Swal.fire({
                       title: "💖 Success Story",
                       html: `
-                        <img src="http://localhost:5000/uploads/${story.coupleImage}" alt="couple" style="max-height:200px; width:auto; margin-bottom:1rem;" />
+                        <img src="https://ass-12-server-wheat.vercel.app/uploads/${story.coupleImage}" alt="couple" style="max-height:200px; width:auto; margin-bottom:1rem;" />
                         <p><strong>Story:</strong> ${story.story}</p>
                         <p><strong>Rating:</strong> ${story.stars} Stars</p>
                         <p><strong>Date:</strong> ${story.marriageDate}</p>

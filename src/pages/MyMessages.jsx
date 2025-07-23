@@ -22,7 +22,7 @@ const MyMessages = () => {
   useEffect(() => {
     if (!userEmail) return;
 
-    fetch(`http://localhost:5000/api/messages?userEmail=${userEmail}`)
+    fetch(`https://ass-12-server-wheat.vercel.app/api/messages?userEmail=${userEmail}`)
       .then(res => res.json())
       .then(data => {
         setMessages(data);
@@ -58,7 +58,7 @@ const MyMessages = () => {
     if (!recipientId) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/messages", {
+      const res = await fetch("https://ass-12-server-wheat.vercel.app/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

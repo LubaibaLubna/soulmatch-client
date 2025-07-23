@@ -13,7 +13,7 @@ const SuccessCounter = () => {
   const [startCount, setStartCount] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/biodata-stats")
+    fetch("https://ass-12-server-wheat.vercel.app/api/biodata-stats")
       .then((res) => res.json())
       .then((data) => setStats(data))
       .catch((err) => console.error("Failed to fetch stats:", err));

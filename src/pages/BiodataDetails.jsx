@@ -19,7 +19,7 @@ const BiodataDetails = () => {
       return;
     }
 
-    fetch(`http://localhost:5000/api/users/${currentUser.email}`)
+    fetch(`https://ass-12-server-wheat.vercel.app/api/users/${currentUser.email}`)
       .then((res) => res.json())
       .then((data) => setUser(data))
       .catch(() => setUser(null));
@@ -32,7 +32,7 @@ const BiodataDetails = () => {
   } = useQuery({
     queryKey: ["biodata", id],
     queryFn: async () => {
-      const res = await fetch(`http://localhost:5000/api/biodatas/${id}`);
+      const res = await fetch(`https://ass-12-server-wheat.vercel.app/api/biodatas/${id}`);
       return res.json();
     },
     enabled: !!id,
@@ -41,7 +41,7 @@ const BiodataDetails = () => {
   useEffect(() => {
     if (!biodata) return;
     fetch(
-      `http://localhost:5000/api/similar-biodatas?type=${encodeURIComponent(
+      `https://ass-12-server-wheat.vercel.app/api/similar-biodatas?type=${encodeURIComponent(
         biodata.type
       )}&excludeId=${id}`
     )
@@ -57,7 +57,7 @@ const BiodataDetails = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/favourites", {
+      const res = await fetch("https://ass-12-server-wheat.vercel.app/api/favourites", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -82,7 +82,7 @@ const BiodataDetails = () => {
 
   const imageUrl = biodata.profileImage?.startsWith("/")
     ? `http://localhost:5000${biodata.profileImage}`
-    : `http://localhost:5000/uploads/${biodata.profileImage}`;
+    : `https://ass-12-server-wheat.vercel.app/uploads/${biodata.profileImage}`;
 
   const canViewContact = user?.isPremium === true;
 
@@ -179,7 +179,7 @@ const BiodataDetails = () => {
                   src={
                     similar.profileImage?.startsWith("/")
                       ? `http://localhost:5000${similar.profileImage}`
-                      : `http://localhost:5000/uploads/${similar.profileImage}`
+                      : `https://ass-12-server-wheat.vercel.app/uploads/${similar.profileImage}`
                   }
                   alt={similar.name}
                   className="w-full h-48 object-cover rounded mb-2"

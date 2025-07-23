@@ -13,7 +13,7 @@ const ViewBiodata = () => {
 
     if (user?.email) {
       axios
-        .get(`http://localhost:5000/api/user-biodatas?email=${user.email}`)
+        .get(`https://ass-12-server-wheat.vercel.app/api/user-biodatas?email=${user.email}`)
         .then((res) => {
           setBiodatas(res.data);
           setLoading(false);
@@ -37,7 +37,7 @@ const ViewBiodata = () => {
     if (confirm.isConfirmed) {
       try {
         const res = await axios.put(
-          `http://localhost:5000/api/biodatas/request-premium/${id}`
+          `https://ass-12-server-wheat.vercel.app/api/biodatas/request-premium/${id}`
         );
         Swal.fire("Success", res.data.message, "success");
       } catch {

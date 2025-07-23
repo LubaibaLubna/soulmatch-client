@@ -48,7 +48,7 @@ const Biodatas = () => {
     if (filters.maxAge) query.append("maxAge", parseInt(filters.maxAge));
 
     setLoading(true);
-    fetch(`http://localhost:5000/api/all-biodatas?${query}`)
+    fetch(`https://ass-12-server-wheat.vercel.app/api/all-biodatas?${query}`)
       .then((res) => res.json())
       .then((data) => {
         setBiodatas(data.biodatas);

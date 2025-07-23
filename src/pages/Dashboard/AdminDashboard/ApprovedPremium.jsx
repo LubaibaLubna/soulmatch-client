@@ -7,7 +7,7 @@ const ApprovedPremium = () => {
 
   const fetchPending = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/admin/pending-premiums");
+      const res = await fetch("https://ass-12-server-wheat.vercel.app/api/admin/pending-premiums");
       const data = await res.json();
       setPending(data);
     } catch {
@@ -32,7 +32,7 @@ const ApprovedPremium = () => {
 
     if (confirm.isConfirmed) {
       try {
-        const res = await fetch(`http://localhost:5000/api/admin/approve-premium/${id}`, {
+        const res = await fetch(`https://ass-12-server-wheat.vercel.app/api/admin/approve-premium/${id}`, {
           method: "PATCH",
         });
 

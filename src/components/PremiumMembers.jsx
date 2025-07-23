@@ -8,7 +8,7 @@ const PremiumMembers = () => {
   const [sortOrder, setSortOrder] = useState("asc");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/premium-biodatas")
+    fetch("https://ass-12-server-wheat.vercel.app/api/premium-biodatas")
       .then((res) => res.json())
       .then((data) => {
         const sorted = [...data].sort((a, b) =>

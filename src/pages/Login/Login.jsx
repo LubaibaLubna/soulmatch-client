@@ -21,7 +21,7 @@ const Login = () => {
       const result = await signInWithEmailAndPassword(auth, email, password);
       const user = result.user;
 
-      const res = await axios.post("http://localhost:5000/api/users", {
+      const res = await axios.post("https://ass-12-server-wheat.vercel.app/api/users", {
         name: user.displayName || "Email User",
         email: user.email,
         photoURL: user.photoURL || "",
@@ -42,7 +42,7 @@ const Login = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      const res = await axios.post("http://localhost:5000/api/users", {
+      const res = await axios.post("https://ass-12-server-wheat.vercel.app/api/users", {
         name: user.displayName,
         email: user.email,
         photoURL: user.photoURL,

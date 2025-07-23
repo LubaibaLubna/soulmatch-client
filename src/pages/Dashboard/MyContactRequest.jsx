@@ -11,7 +11,7 @@ const MyContactRequest = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/contact-requests?email=${userEmail}`);
+        const res = await fetch(`https://ass-12-server-wheat.vercel.app/api/contact-requests?email=${userEmail}`);
         const data = await res.json();
         setRequests(data);
       } catch (err) {
@@ -35,7 +35,7 @@ const MyContactRequest = () => {
 
     if (confirm.isConfirmed) {
       try {
-        const res = await fetch(`http://localhost:5000/api/contact-requests/${id}`, {
+        const res = await fetch(`https://ass-12-server-wheat.vercel.app/api/contact-requests/${id}`, {
           method: "DELETE",
         });
         if (res.ok) {

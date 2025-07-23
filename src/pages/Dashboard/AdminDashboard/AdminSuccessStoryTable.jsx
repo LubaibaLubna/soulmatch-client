@@ -6,7 +6,7 @@ const AdminSuccessStoryTable = () => {
   const [selectedStory, setSelectedStory] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/success-stories")
+    fetch("https://ass-12-server-wheat.vercel.app/api/success-stories")
       .then((res) => res.json())
       .then((data) => setStories(data))
       .catch((err) => console.error("Error loading stories:", err));

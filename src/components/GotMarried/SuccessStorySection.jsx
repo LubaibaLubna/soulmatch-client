@@ -8,7 +8,7 @@ const SuccessStorySection = () => {
   const [stories, setStories] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/success-stories")
+    fetch("https://ass-12-server-wheat.vercel.app/api/success-stories")
       .then((res) => res.json())
       .then((data) => setStories(data))
       .catch(() => {});

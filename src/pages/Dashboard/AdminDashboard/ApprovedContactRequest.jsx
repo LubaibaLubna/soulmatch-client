@@ -7,7 +7,7 @@ const ApprovedContactRequest = () => {
 
   const fetchRequests = () => {
     setLoading(true);
-    fetch("http://localhost:5000/api/admin/contact-requests")
+    fetch("https://ass-12-server-wheat.vercel.app/api/admin/contact-requests")
       .then((res) => res.json())
       .then((data) => {
         setRequests(data);
@@ -25,7 +25,7 @@ const ApprovedContactRequest = () => {
 
   const handleApprove = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/approve-contact/${id}`, {
+      const res = await fetch(`https://ass-12-server-wheat.vercel.app/api/admin/approve-contact/${id}`, {
         method: "PATCH",
       });
 

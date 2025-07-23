@@ -17,7 +17,7 @@ const DashboardLayout = () => {
     }
 
     if (user?.email) {
-      fetch(`http://localhost:5000/api/users?email=${user.email}`)
+      fetch(`https://ass-12-server-wheat.vercel.app/api/users?email=${user.email}`)
         .then((res) => res.json())
         .then((data) => {
           setRole(data.role); // "admin" or "user"

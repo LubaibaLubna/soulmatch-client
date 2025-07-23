@@ -11,7 +11,7 @@ const MyFavourites = () => {
     const currentUser = auth.currentUser;
     if (currentUser?.email) {
       setUserEmail(currentUser.email);
-      fetch(`http://localhost:5000/api/favourites/${currentUser.email}`)
+      fetch(`https://ass-12-server-wheat.vercel.app/api/favourites/${currentUser.email}`)
         .then((res) => res.json())
         .then((data) => setFavourites(data));
     }
@@ -26,7 +26,7 @@ const MyFavourites = () => {
     });
 
     if (confirmed.isConfirmed) {
-      const res = await fetch(`http://localhost:5000/api/favourites/${id}`, {
+      const res = await fetch(`https://ass-12-server-wheat.vercel.app/api/favourites/${id}`, {
         method: "DELETE",
       });
       if (res.ok) {

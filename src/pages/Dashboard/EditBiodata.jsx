@@ -17,7 +17,7 @@ const EditBiodata = () => {
 
     const fetchBiodata = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/biodatas?email=${user.email}`);
+        const res = await fetch(`https://ass-12-server-wheat.vercel.app/api/biodatas?email=${user.email}`);
         if (!res.ok) throw new Error("Failed to fetch biodata");
         const data = await res.json();
         setBiodata(data);

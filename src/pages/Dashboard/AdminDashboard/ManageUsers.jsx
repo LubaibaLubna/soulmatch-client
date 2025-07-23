@@ -10,7 +10,7 @@ const ManageUsers = () => {
 
   const fetchUsers = (query = "") => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/admin/users?search=${encodeURIComponent(query)}`)
+    fetch(`https://ass-12-server-wheat.vercel.app/api/admin/users?search=${encodeURIComponent(query)}`)
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
@@ -35,7 +35,7 @@ const ManageUsers = () => {
 
   const updateUser = async (id, updates) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/users/${id}`, {
+      const res = await fetch(`https://ass-12-server-wheat.vercel.app/api/admin/users/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updates),

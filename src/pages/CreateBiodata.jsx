@@ -48,7 +48,7 @@
 //       data.append("occupation", formData.occupation);
 //       data.append("profileImage", profileImageFile);
 
-//       const res = await fetch("http://localhost:5000/api/biodatas", {
+//       const res = await fetch("https://ass-12-server-wheat.vercel.app/api/biodatas", {
 //         method: "POST",
 //         body: data,
 //       });
