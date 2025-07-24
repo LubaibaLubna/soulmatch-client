@@ -58,7 +58,7 @@ const PremiumMembers = () => {
                 {/* Square Image */}
                 <div className="w-full h-56 overflow-hidden mb-3 rounded-md relative">
                   <img
-                    src={`http://localhost:5000${item.profileImage}`}
+                    src={item.profileImage}
                     alt={item.name}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />
@@ -71,19 +71,15 @@ const PremiumMembers = () => {
                 <div className="grid grid-cols-2 text-sm gap-y-2 mb-4">
                   <div>
                     <p className="text-gray-600 font-medium">Biodata ID: {item.biodataId}</p>
-                
                   </div>
                   <div>
                     <p className="text-gray-600 font-medium">Type / Age: {item.type} / {item.age}</p>
-                  
                   </div>
                   <div>
                     <p className="text-gray-600 font-medium">Division: {item.permanentDivision}</p>
-                    
                   </div>
                   <div>
                     <p className="text-gray-600 font-medium">Occupation: {item.occupation}</p>
-                   
                   </div>
                 </div>
 

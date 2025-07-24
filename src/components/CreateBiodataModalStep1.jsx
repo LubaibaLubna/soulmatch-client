@@ -28,7 +28,6 @@ const CreateBiodataModalStep1 = ({ formData, onChange, nextStep }) => {
   const [days, setDays] = useState([]);
   const [selectedDay, setSelectedDay] = useState("");
 
-  // ✅ Generate days based on year and month
   useEffect(() => {
     if (selectedYear && selectedMonth) {
       const lastDay = new Date(selectedYear, selectedMonth, 0).getDate();
@@ -36,13 +35,11 @@ const CreateBiodataModalStep1 = ({ formData, onChange, nextStep }) => {
     }
   }, [selectedYear, selectedMonth]);
 
-  // ✅ When full DOB is selected, update dob and auto calculate age
   useEffect(() => {
     if (selectedYear && selectedMonth && selectedDay) {
       const dobString = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`;
       onChange("dob", dobString);
 
-      // ✅ Calculate Age
       const today = new Date();
       const birthDate = new Date(dobString);
       let age = today.getFullYear() - birthDate.getFullYear();
@@ -82,6 +79,19 @@ const CreateBiodataModalStep1 = ({ formData, onChange, nextStep }) => {
             type="text"
             value={formData.name}
             onChange={(e) => onChange("name", e.target.value)}
+            className="w-full border rounded px-3 py-2"
+            required
+          />
+        </div>
+
+        {/* ✅ Profile Image (URL) */}
+        <div className="col-span-1 md:col-span-2">
+          <label className="block mb-1 font-medium">Profile Image (imgbb URL)*</label>
+          <input
+            type="text"
+            value={formData.profileImage}
+            onChange={(e) => onChange("profileImage", e.target.value)}
+            placeholder="https://i.ibb.co/your-image-link.jpg"
             className="w-full border rounded px-3 py-2"
             required
           />

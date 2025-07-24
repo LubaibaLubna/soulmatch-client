@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { getAuth } from "firebase/auth"; // ✅ Import Firebase auth
+import { getAuth } from "firebase/auth";
 import CreateBiodataModalStep1 from "./CreateBiodataModalStep1";
-import CreateBiodataModalStep3 from "./CreateBiodataModalStep3";
 import CreateBiodataModalStep2 from "./CreateBiodataModalStep2";
+import CreateBiodataModalStep3 from "./CreateBiodataModalStep3";
 
 const CreateBiodataModal = ({ onSuccess }) => {
   const [step, setStep] = useState(1);
@@ -11,7 +11,7 @@ const CreateBiodataModal = ({ onSuccess }) => {
   const [formData, setFormData] = useState({
     type: "",
     name: "",
-    profileImage: "",
+    profileImage: "", // Now expects a direct URL
     dob: "",
     height: "",
     weight: "",
@@ -25,19 +25,18 @@ const CreateBiodataModal = ({ onSuccess }) => {
     expectedPartnerAge: "",
     expectedPartnerHeight: "",
     expectedPartnerWeight: "",
-    contactEmail: "", // This will be set from Firebase
+    contactEmail: "", // set from Firebase
     mobileNumber: "",
     religion: "",
     education: "",
     isPremium: false,
   });
 
-  // ✅ Set user's email from Firebase Auth
   useEffect(() => {
     const auth = getAuth();
     const user = auth.currentUser;
     if (user?.email) {
-      setFormData(prev => ({ ...prev, contactEmail: user.email }));
+      setFormData((prev) => ({ ...prev, contactEmail: user.email }));
     }
   }, []);
 
@@ -48,36 +47,32 @@ const CreateBiodataModal = ({ onSuccess }) => {
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
-const handleSubmit = async () => {
-  if (!formData.profileImage) {
-    Swal.fire("Error", "Profile Image is required", "error");
-    return;
-  }
-
-  const form = new FormData();
-  for (const key in formData) {
-    form.append(key, formData[key]);
-  }
-
-  try {
-    const res = await fetch("https://ass-12-server-wheat.vercel.app/api/biodatas", {
-      method: "POST",
-      // ❌ DO NOT include 'Content-Type'. Let browser set it automatically
-      body: form,
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      Swal.fire("Success", "Biodata created successfully!", "success");
-      onSuccess();
-    } else {
-      Swal.fire("Error", data.error || "Something went wrong", "error");
+  const handleSubmit = async () => {
+    if (!formData.profileImage) {
+      Swal.fire("Error", "Profile Image (URL) is required", "error");
+      return;
     }
-  } catch (err) {
-    Swal.fire("Error", "Failed to submit biodata", "error");
-  }
-};
 
+    try {
+      const res = await fetch("https://ass-12-server-wheat.vercel.app/api/biodatas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        Swal.fire("Success", "Biodata created successfully!", "success");
+        onSuccess();
+      } else {
+        Swal.fire("Error", data.error || "Something went wrong", "error");
+      }
+    } catch (err) {
+      Swal.fire("Error", "Failed to submit biodata", "error");
+    }
+  };
 
   return (
     <div className="w-full text-gray-700">

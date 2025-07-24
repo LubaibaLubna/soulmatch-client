@@ -1,28 +1,4 @@
-import { useRef, useState, useEffect } from "react";
-
 const CreateBiodataModalStep3 = ({ formData, onChange, prevStep, onSubmit }) => {
-  const fileInputRef = useRef();
-  const [previewUrl, setPreviewUrl] = useState(null);
-
-  useEffect(() => {
-    if (formData.profileImage && typeof formData.profileImage !== "string") {
-      const fileReader = new FileReader();
-      fileReader.onloadend = () => {
-        setPreviewUrl(fileReader.result);
-      };
-      fileReader.readAsDataURL(formData.profileImage);
-    } else {
-      setPreviewUrl(null);
-    }
-  }, [formData.profileImage]);
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      onChange("profileImage", file);
-    }
-  };
-
   return (
     <div>
       <h3 className="text-xl font-bold mb-6 text-pink-600">Step 3: Expectations & Contact</h3>
@@ -69,26 +45,27 @@ const CreateBiodataModalStep3 = ({ formData, onChange, prevStep, onSubmit }) => 
           />
         </div>
 
-        {/* Profile Image Upload */}
+        {/* Image URL Input (Instead of Upload) */}
         <div>
-          <label className="block mb-1 font-medium">Profile Image*</label>
+          <label className="block mb-1 font-medium">Profile Image URL*</label>
           <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleFileChange}
+            type="url"
+            value={formData.profileImage}
+            onChange={(e) => onChange("profileImage", e.target.value)}
+            placeholder="Paste imgbb image URL"
             className="w-full border rounded px-3 py-2"
+            required
           />
-          {previewUrl && (
+          {formData.profileImage && (
             <img
-              src={previewUrl}
+              src={formData.profileImage}
               alt="Preview"
               className="mt-2 w-32 h-32 object-cover rounded border"
             />
           )}
         </div>
 
-         {/* Last Education */}
+        {/* Last Education */}
         <div>
           <label className="block mb-1 font-medium">Last Education</label>
           <select
@@ -104,8 +81,6 @@ const CreateBiodataModalStep3 = ({ formData, onChange, prevStep, onSubmit }) => 
             <option value="PhD">PhD</option>
           </select>
         </div>
-
-
       </div>
 
       {/* Navigation Buttons */}
