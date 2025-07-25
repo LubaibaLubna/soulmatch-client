@@ -80,9 +80,7 @@ const BiodataDetails = () => {
   if (isLoading) return <div className="text-center py-20">Loading...</div>;
   if (error || !biodata) return <div className="text-center py-20">Biodata not found</div>;
 
-  const imageUrl = biodata.profileImage?.startsWith("/")
-    ? `http://localhost:5000${biodata.profileImage}`
-    : `https://ass-12-server-wheat.vercel.app/uploads/${biodata.profileImage}`;
+  const imageUrl = biodata.profileImage;
 
   const canViewContact = user?.isPremium === true;
 
@@ -112,8 +110,14 @@ const BiodataDetails = () => {
               <Info label="Religion" value={biodata.religion} />
               <Info label="Height" value={biodata.height} />
               <Info label="Weight" value={biodata.weight} />
-              <Info label="Mobile" value={canViewContact ? biodata.mobileNumber : "Only Premium Members"} />
-              <Info label="Email" value={canViewContact ? biodata.contactEmail : "Only Premium Members"} />
+              <Info
+                label="Mobile"
+                value={canViewContact ? biodata.mobileNumber : "Only Premium Members"}
+              />
+              <Info
+                label="Email"
+                value={canViewContact ? biodata.contactEmail : "Only Premium Members"}
+              />
             </div>
           </div>
         </div>
@@ -147,7 +151,9 @@ const BiodataDetails = () => {
               onClick={handleAddFavourite}
               disabled={!user?.email}
               className={`text-sm px-4 py-2 rounded ${
-                user?.email ? 'bg-pink-600 hover:bg-pink-700 text-white' : 'bg-gray-300 cursor-not-allowed'
+                user?.email
+                  ? "bg-pink-600 hover:bg-pink-700 text-white"
+                  : "bg-gray-300 cursor-not-allowed"
               }`}
             >
               ⭐ Add to Favourites
@@ -176,11 +182,7 @@ const BiodataDetails = () => {
                 className="cursor-pointer border border-pink-100 rounded-lg p-4 bg-white hover:shadow-md transition"
               >
                 <img
-                  src={
-                    similar.profileImage?.startsWith("/")
-                      ? `http://localhost:5000${similar.profileImage}`
-                      : `https://ass-12-server-wheat.vercel.app/uploads/${similar.profileImage}`
-                  }
+                  src={similar.profileImage}
                   alt={similar.name}
                   className="w-full h-48 object-cover rounded mb-2"
                 />

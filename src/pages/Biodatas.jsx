@@ -274,7 +274,7 @@ const Biodatas = () => {
                   className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden border border-pink-100"
                 >
                   <img
-                    src={`http://localhost:5000${data.profileImage}`}
+                    src={data.profileImage}
                     alt="profile"
                     className="w-full h-56 object-cover"
                   />

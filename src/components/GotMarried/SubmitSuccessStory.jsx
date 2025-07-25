@@ -8,7 +8,7 @@ const SubmitSuccessStory = () => {
     marriageDate: "",
     stars: 5,
     story: "",
-    coupleImage: null,
+    coupleImage: "", // now a string URL
   });
 
   const handleChange = (e) => {
@@ -16,29 +16,30 @@ const SubmitSuccessStory = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e) => {
-    setForm((prev) => ({ ...prev, coupleImage: e.target.files[0] }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const { selfBiodataId, partnerBiodataId, marriageDate, story, coupleImage } = form;
+    const { selfBiodataId, partnerBiodataId, marriageDate, story, stars, coupleImage } = form;
 
     if (!selfBiodataId || !partnerBiodataId || !marriageDate || !story || !coupleImage) {
-      Swal.fire("Error", "Please fill all fields", "error");
-      return;
+      return Swal.fire("Error", "Please fill in all fields", "error");
     }
 
-    const formData = new FormData();
-    Object.entries(form).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
     try {
+      // No upload needed since user provides URL directly
+      // Just send the data to your server
       const res = await fetch("https://ass-12-server-wheat.vercel.app/api/success-stories", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          selfBiodataId,
+          partnerBiodataId,
+          marriageDate,
+          stars: parseInt(stars),
+          story,
+          coupleImage, // direct URL from user input
+        }),
       });
 
       const data = await res.json();
@@ -51,13 +52,13 @@ const SubmitSuccessStory = () => {
           marriageDate: "",
           stars: 5,
           story: "",
-          coupleImage: null,
+          coupleImage: "",
         });
       } else {
-        Swal.fire("Error", data.error || "Something went wrong", "error");
+        Swal.fire("Error", data.error || "Submission failed", "error");
       }
     } catch (err) {
-      Swal.fire("Error", "Failed to submit story", "error");
+      Swal.fire("Error", err.message || "Something went wrong", "error");
     }
   };
 
@@ -74,7 +75,6 @@ const SubmitSuccessStory = () => {
             value={form.selfBiodataId}
             onChange={handleChange}
             className="w-full border rounded px-3 py-2"
-            placeholder="Enter your biodata ID"
             required
           />
         </div>
@@ -87,7 +87,6 @@ const SubmitSuccessStory = () => {
             value={form.partnerBiodataId}
             onChange={handleChange}
             className="w-full border rounded px-3 py-2"
-            placeholder="Enter partner's biodata ID"
             required
           />
         </div>
@@ -128,18 +127,19 @@ const SubmitSuccessStory = () => {
             onChange={handleChange}
             className="w-full border rounded px-3 py-2"
             rows={4}
-            placeholder="How did SoulMatch help you?"
             required
           />
         </div>
 
         <div>
-          <label className="block font-medium mb-1">Couple Image</label>
+          <label className="block font-medium mb-1">Couple Image URL</label>
           <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
+            type="url"
+            name="coupleImage"
+            value={form.coupleImage}
+            onChange={handleChange}
             className="w-full border rounded px-3 py-2"
+            placeholder="Paste image URL here"
             required
           />
         </div>

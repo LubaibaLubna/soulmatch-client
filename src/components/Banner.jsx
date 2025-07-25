@@ -35,12 +35,15 @@ const Banner = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // If redirected from login, show modal
-  useEffect(() => {
-    if (location.state?.openModal) {
-      setShowModal(true);
-    }
-  }, [location.state]);
+useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const openFromQuery = params.get("openModal");
+
+  if (openFromQuery) {
+    setShowModal(true);
+  }
+}, [location]);
+
 
   // Handle profile button
   const handleCreateProfileClick = () => {

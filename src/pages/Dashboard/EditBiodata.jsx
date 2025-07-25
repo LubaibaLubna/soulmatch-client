@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import BiodataForm from "./BiodataForm";
+import CreateBiodataModal from "../../components/CreateBiodataModal";
 
 const EditBiodata = () => {
   const { user } = useContext(AuthContext);
@@ -10,20 +10,25 @@ const EditBiodata = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) {
+    if (!user?.email) {
       navigate("/login");
       return;
     }
 
     const fetchBiodata = async () => {
       try {
-        const res = await fetch(`https://ass-12-server-wheat.vercel.app/api/biodatas?email=${user.email}`);
+        const res = await fetch(
+          `https://ass-12-server-wheat.vercel.app/api/all-biodatas?email=${user.email}`
+        );
         if (!res.ok) throw new Error("Failed to fetch biodata");
+
         const data = await res.json();
-        setBiodata(data);
+        const selected = Array.isArray(data) ? data[0] : data;
+
+        setBiodata(selected || null);
       } catch (err) {
-        console.error(err);
-        setBiodata(null); // no biodata found, user can create new
+        console.error("❌ Error loading biodata:", err);
+        setBiodata(null);
       } finally {
         setLoading(false);
       }
@@ -32,17 +37,22 @@ const EditBiodata = () => {
     fetchBiodata();
   }, [user, navigate]);
 
+  const handleSuccess = () => {
+    navigate("/dashboard");
+  };
+
   if (loading) {
-    return <div className="text-center mt-20">Loading your biodata...</div>;
+    return (
+      <div className="text-center text-gray-600 mt-20">Loading biodata...</div>
+    );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-white  rounded shadow">
-      <h1 className="text-3xl text-pink-600 font-bold mb-6">Edit Your Biodata</h1>
-      <BiodataForm
-        initialData={biodata}
-        onSuccess={() => navigate("/dashboard")}
-      />
+    <div className="p-4 max-w-4xl mx-auto">
+      <h2 className="text-3xl font-bold text-pink-600 mb-4">✏️ Edit Your Biodata</h2>
+
+      {/* 🔁 Use same modal component here, but as a full-page component */}
+      <CreateBiodataModal initialData={biodata} onSuccess={handleSuccess} />
     </div>
   );
 };

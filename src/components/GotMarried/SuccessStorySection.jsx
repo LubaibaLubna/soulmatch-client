@@ -43,7 +43,7 @@ const SuccessStorySection = () => {
                 <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:scale-105 group">
                   <div className="overflow-hidden">
                     <img
-                      src={`http://localhost:5000${story.coupleImage}`}
+                      src={story.coupleImage}
                       alt="Couple"
                       className="w-full h-60 object-cover group-hover:brightness-95 duration-300"
                     />

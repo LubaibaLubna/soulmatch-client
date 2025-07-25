@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X } from "lucide-react"; // Optional: icon for modal close
+import { X } from "lucide-react";
 
 const AdminSuccessStoryTable = () => {
   const [stories, setStories] = useState([]);
@@ -36,8 +36,12 @@ const AdminSuccessStoryTable = () => {
                   key={story._id}
                   className="border-t hover:bg-pink-50 transition duration-200 text-gray-700"
                 >
-                  <td className="px-6 py-3">{story.selfBiodataId}</td>
-                  <td className="px-6 py-3">{story.partnerBiodataId}</td>
+                  <td className="px-6 py-3">
+                    {story.selfBiodataId?._id || story.selfBiodataId || "N/A"}
+                  </td>
+                  <td className="px-6 py-3">
+                    {story.partnerBiodataId?._id || story.partnerBiodataId || "N/A"}
+                  </td>
                   <td className="px-6 py-3 text-center">
                     <button
                       onClick={() => setSelectedStory(story)}
@@ -53,7 +57,7 @@ const AdminSuccessStoryTable = () => {
         </div>
       )}
 
-      {/* MODAL */}
+      {/* Modal */}
       {selectedStory && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4">
           <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-lg relative">
@@ -68,7 +72,7 @@ const AdminSuccessStoryTable = () => {
 
             {selectedStory.coupleImage && (
               <img
-                src={`http://localhost:5000${selectedStory.coupleImage}`}
+                src={selectedStory.coupleImage}
                 alt="Couple"
                 className="w-full h-52 object-cover rounded-lg shadow mb-4"
               />

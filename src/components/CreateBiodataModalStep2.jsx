@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const CreateBiodataModalStep2 = ({ formData, onChange, nextStep, prevStep }) => {
   const [mobileError, setMobileError] = useState("");

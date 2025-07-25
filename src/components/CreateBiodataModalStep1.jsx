@@ -28,6 +28,16 @@ const CreateBiodataModalStep1 = ({ formData, onChange, nextStep }) => {
   const [days, setDays] = useState([]);
   const [selectedDay, setSelectedDay] = useState("");
 
+  // ✅ Prefill year/month/day if dob exists
+  useEffect(() => {
+    if (formData.dob && typeof formData.dob === "number") {
+      const date = new Date(formData.dob);
+      setSelectedYear(String(date.getFullYear()));
+      setSelectedMonth(String(date.getMonth() + 1));
+      setSelectedDay(String(date.getDate()));
+    }
+  }, []);
+
   useEffect(() => {
     if (selectedYear && selectedMonth) {
       const lastDay = new Date(selectedYear, selectedMonth, 0).getDate();
@@ -38,13 +48,15 @@ const CreateBiodataModalStep1 = ({ formData, onChange, nextStep }) => {
   useEffect(() => {
     if (selectedYear && selectedMonth && selectedDay) {
       const dobString = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`;
-      onChange("dob", dobString);
+      const dobDate = new Date(dobString);
+      const dobTimestamp = dobDate.getTime(); // ✅ convert to number
+
+      onChange("dob", dobTimestamp); // ✅ save as number
 
       const today = new Date();
-      const birthDate = new Date(dobString);
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      let age = today.getFullYear() - dobDate.getFullYear();
+      const m = today.getMonth() - dobDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
         age--;
       }
 
@@ -79,19 +91,6 @@ const CreateBiodataModalStep1 = ({ formData, onChange, nextStep }) => {
             type="text"
             value={formData.name}
             onChange={(e) => onChange("name", e.target.value)}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-        </div>
-
-        {/* ✅ Profile Image (URL) */}
-        <div className="col-span-1 md:col-span-2">
-          <label className="block mb-1 font-medium">Profile Image (imgbb URL)*</label>
-          <input
-            type="text"
-            value={formData.profileImage}
-            onChange={(e) => onChange("profileImage", e.target.value)}
-            placeholder="https://i.ibb.co/your-image-link.jpg"
             className="w-full border rounded px-3 py-2"
             required
           />

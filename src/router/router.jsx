@@ -7,7 +7,6 @@ import CreateBiodataModal from "../components/CreateBiodataModal";
 import Biodatas from "../pages/Biodatas";
 import PrivateRoute from "./PrivateRoute";
 import BiodataDetails from "../pages/BiodataDetails";
-import Payment from "../pages/Dashboard/Payment";
 import CheckoutPage from "../pages/Dashboard/CheckoutPage";
 import DashboardLayout from "../layouts/DashboardLayout";
 import EditBiodata from "../pages/Dashboard/EditBiodata";
@@ -86,12 +85,7 @@ export const router = createBrowserRouter([
         element: <PrivateRoute>
           <CheckoutPage />
         </PrivateRoute>,
-        children: [
-          {
-            path: 'payment/:id',
-            Component: Payment
-          }
-        ]
+     
 
       },
 

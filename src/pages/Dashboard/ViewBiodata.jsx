@@ -50,10 +50,6 @@ const ViewBiodata = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4">
-      {/* <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-        My Biodata
-      </h2> */}
-
       {biodatas.length === 0 ? (
         <p className="text-center text-gray-500">No biodata found.</p>
       ) : (
@@ -62,23 +58,20 @@ const ViewBiodata = () => {
             key={biodata._id}
             className="bg-white shadow-md rounded-2xl overflow-hidden mb-10 border border-gray-200 hover:shadow-xl transition"
           >
-            {/* Layout */}
             <div className="flex flex-col md:flex-row">
-              {/* Left: Profile Image */}
+              {/* Profile Image (imgbb link) */}
               <div className="md:w-1/3 w-full">
                 <img
-                  src={`http://localhost:5000${biodata.profileImage}`}
+                  src={biodata.profileImage}
                   alt={biodata.name}
                   className="w-full h-full object-cover object-center md:rounded-l-2xl"
                 />
               </div>
 
-              {/* Right: Biodata Info */}
+              {/* Biodata Info */}
               <div className="md:w-2/3 w-full p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-2xl font-semibold text-gray-800">
-                    {biodata.name}
-                  </h3>
+                  <h3 className="text-2xl font-semibold text-gray-800">{biodata.name}</h3>
                   <span
                     className={`px-3 py-1 text-sm rounded-full font-medium ${
                       biodata.isPremium
@@ -116,15 +109,9 @@ const ViewBiodata = () => {
                     Expected Partner Preferences
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-gray-700 text-sm">
-                    <p>
-                      <strong>Age:</strong> {biodata.expectedPartnerAge}
-                    </p>
-                    <p>
-                      <strong>Height:</strong> {biodata.expectedPartnerHeight}
-                    </p>
-                    <p>
-                      <strong>Weight:</strong> {biodata.expectedPartnerWeight}
-                    </p>
+                    <p><strong>Age:</strong> {biodata.expectedPartnerAge}</p>
+                    <p><strong>Height:</strong> {biodata.expectedPartnerHeight}</p>
+                    <p><strong>Weight:</strong> {biodata.expectedPartnerWeight}</p>
                   </div>
                 </div>
 
