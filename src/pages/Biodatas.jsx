@@ -161,15 +161,13 @@ const Biodatas = () => {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-white to-pink-50 px-4 py-12">
+    <section className="min-h-screen bg-gradient-to-b from-white to-pink-50 px-4 py-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Filter Section */}
         <div className="bg-white rounded-lg shadow p-5 md:sticky md:top-20 h-fit border border-pink-100 text-gray-700">
-          <h2 className="text-xl font-bold text-pink-600 mb-4 flex items-center gap-2">
-            <FaFilter /> Filter Biodatas
-          </h2>
+         
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div>
               <label className="text-sm font-medium">Min Age</label>
               <input
